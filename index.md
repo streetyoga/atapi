@@ -15,7 +15,7 @@ Project is planed to be production ready in 2 years and shall remain written pur
 - Securing and encrypting API keys in external file.
 - Reflection on different deployment possibilities beyond running it in a terminal window, like cron jobs, Windows Task Scheduler, Power Automate...
 - Considerations how to evolve the interface from a Jupyter notebook, options are [Python Fire](https://github.com/google/python-firegoogle) for a CLI interface, and [rich](https://github.com/Textualize/rich) for a textual interface. A pure implementation in the Python REPL or as [Python IDLE](https://github.com/python/cpython/tree/main/Lib/idlelib) plugin is also considered.
-- Adding a second algorithm. 
+- Adding a second algorithm, first draft on how to create own algorithms and trading strategies in the framework, either domain specific or in pure Python.
 - Switching between implemented algorithms, including backtest, forward test and going from test network to main, no leverage.
 - slowly implementing leverage starting with 2x only.
 - Switching between Hedge-mode and One-way mode on binance.
