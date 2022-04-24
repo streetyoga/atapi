@@ -21,7 +21,7 @@ Project is planed to be production ready in 2 years and shall remain written pur
 - Switching between Hedge-mode and One-way mode on binance.
 - Expanding to binance spot market, nft market. 
 - Implementing arbitrage trading with other exchanges.
-- Implementation of GUI, hot candidates are [tkinter](https://github.com/python/cpython/tree/main/Lib/tkinter) with heavy skinning to give it a modern look and [voila](https://github.com/voila-dashboards/voila).
+- Implementation of GUI, hot candidates are [tkinter](https://github.com/python/cpython/tree/main/Lib/tkinter) with heavy skinning to give it a modern look, and [voila](https://github.com/voila-dashboards/voila).
 
 This project is meant to sharpen my Python programming skills, no guaranties or responsibilites from outcomes by using this software will be covered by me.
 
