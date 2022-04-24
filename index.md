@@ -13,7 +13,7 @@ Project is planed to be production ready in 2 years and shall remain written pur
 - decision which algorithm to implement first, probably simple moving average with fixed values.
 - a rudementary implementation in a Jupyter notebook, with api keys stored in it, which can be exported to a python script. Binance futures market only.
 - Securing and encrypting API keys in external file.
-- Reflection on different deployment possibilities beyond running it in a terminal window like cron jobs, Windows Task Scheduler, Power Automate...
+- Reflection on different deployment possibilities beyond running it in a terminal window, like cron jobs, Windows Task Scheduler, Power Automate...
 - Considerations how to evolve the interface from a Jupyter notebook, options are [Python Fire](https://github.com/google/python-firegoogle) for a CLI interface, and [rich](https://github.com/Textualize/rich) for a textual interface. A pure implementation in the Python REPL or as [Python IDLE](https://github.com/python/cpython/tree/main/Lib/idlelib) plugin is also considered.
 - Adding a second algorithm. 
 - Switching between implemented algorithms, including backtest, forward test and going from test network to main, no leverage.
