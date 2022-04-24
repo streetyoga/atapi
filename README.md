@@ -11,9 +11,15 @@ TODO
 
 ## Development
 
-TODO
+Run `make test`
+For Windows install WSL and a distro like kali, then run
+kali run `make test`
 
 
 ## Project 
 
 https://github.com/streetyoga/atf
+
+## License
+
+[MIT](LICENSE.txt)
