@@ -1,6 +1,6 @@
 ### Implementation
 
-It will start as a [JupyterLab Notebook](https://github.com/jupyterlab/jupyterlab) which can be exported to a flat [Python](https://github.com/python/cpython) file, ready to be deployed on AWS or other cloud computing platforms.
+The project will start out as a [JupyterLab Notebook](https://github.com/jupyterlab/jupyterlab) which can be exported to a flat [Python](https://github.com/python/cpython) file, ready to be deployed on AWS or other cloud computing platforms.
 
 
 ### Milestones
