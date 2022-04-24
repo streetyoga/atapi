@@ -11,9 +11,8 @@ TODO
 
 ## Development
 
-Run `make test`
-For Windows install WSL and a distro like kali, then run
-kali run `make test`
+Run `make test`  
+For Windows install WSL and a distro like kali, then run `kali run make test`
 
 
 ## Project 
