@@ -1,37 +1,36 @@
-## Welcome to GitHub Pages
+## Welcome to streetyoga.capital
 
-You can use the [editor on GitHub](https://github.com/streetyoga/streetyoga.capital/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+This is a future framework to backtest, forward test and deploy various trading algorithms and strategies on cryptocurrency exchanges, including aribrage trading between those exchanges.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Implementation
 
-```markdown
-Syntax highlighted code block
+It will start as a [JupyterLab Notebook](https://github.com/jupyterlab/jupyterlab) which can be exported to a flat [Python](https://github.com/python/cpython) file, ready to be deployed on AWS or other cloud computing platforms.
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+### Milestones
 
-1. Numbered
-2. List
+Project is planed to be production ready in 2 years and shall remain written purly in Python:
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
+- Consideration between [python-binance](https://github.com/sammchardy/python-binanceIt) and [CCXT](https://github.com/ccxt/ccxt) library. CCXT has the advantage to support hundreds of exchanges out of the box which should faciliate the implementation of arbitrage among different exchanges, but python-binance might have better api support for binance, i.e. implement NFT trading of the official binance API earlier, once it will be supported.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+- decision which algorithm to implement first, probably simple moving average with fixed values.
+- a rudementary implementation in a Jupyter notebook, with api keys stored in it, which can be exported to a python script. Binance futures market only.
+- Securing and encrypting API keys in external file.
+- Reflection on different deployment possibilities beyond running it in a terminal window like cron jobs, Windows Task Scheduler, Power Automate...
+- Considerations how to evolve the interface from a Jupyter notebook, options are [Python Fire](https://github.com/google/python-firegoogle) for a CLI interface, and [rich](https://github.com/Textualize/rich) for a textual interface. A pure implementation in the Python REPL or as [Python IDLE](https://github.com/python/cpython/tree/main/Lib/idlelib) plugin is also considered.
+- Adding a second algorithm. 
+- Switching between implemented algorithms, including backtest, forward test and going from test network to main, no leverage.
+- slowly implementing leverage starting with 2x only.
+- Switching between Hedge-mode and One-way mode on binance.
+- Expanding to binance spot market, nft market. 
+- Implementing arbitrage trading with other exchanges.
+- Implementation of GUI, hot candidates are [tkinter](https://github.com/python/cpython/tree/main/Lib/tkinter) with heavy skinning to give it a modern look and [voila](https://github.com/voila-dashboards/voila).
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/streetyoga/streetyoga.capital/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+This project is meant to sharpen my Python programming skills, no guaranties or responsibilites from outcomes by using my software will be covered by me.
 
 ### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+You can contact me on [Linkedin](https://www.linkedin.com/in/streetyogi/) to give feedback and share ideas, or right here on github.
