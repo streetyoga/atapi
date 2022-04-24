@@ -8,7 +8,7 @@ The project will start out as a [JupyterLab Notebook](https://github.com/jupyter
 Project is planed to be production ready in 2 years and shall remain written purly in Python:
 
 
-- Consideration between [python-binance](https://github.com/sammchardy/python-binanceIt) and [CCXT](https://github.com/ccxt/ccxt) library. CCXT has the advantage to support hundreds of exchanges out of the box which should faciliate the implementation of arbitrage among different exchanges, but python-binance might have better api support for binance, i.e. implement NFT trading of the official binance API earlier, once it will be supported.
+- Consideration between [python-binance](https://github.com/sammchardy/python-binance) and [CCXT](https://github.com/ccxt/ccxt) library. CCXT has the advantage to support hundreds of exchanges out of the box which should faciliate the implementation of arbitrage among different exchanges, but python-binance might have better api support for binance, i.e. implement NFT trading of the official binance API earlier, once it will be supported.
 
 - decision which algorithm to implement first, probably simple moving average with fixed values.
 - a rudementary implementation in a Jupyter notebook, with api keys stored in it, which can be exported to a python script. Binance futures market only.
