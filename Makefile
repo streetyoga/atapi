@@ -1,8 +1,12 @@
 all:
 	$(error please pick a target)
 
-dev-env: 
+env:
 	test -d env || python3 -m venv env
+	./env/bin/python3 -m pip install -r requirements.txt
+
+
+dev-env: env
 	./env/bin/python3 -m pip install -r requirements-dev.txt
 
 test:
