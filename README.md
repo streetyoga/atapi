@@ -11,7 +11,7 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 >>> atf.strategy.buy_and_hold()
 >>> atf.algo.sma(amount = 0, position = None)
 >>> atf.algo.sma(trendlines = [200, 50], position = 50, asset = 'BTCUSDT')
->>> atf.algo.sma(position = 100, short = True, asset = 'ETHUSDT')
+>>> atf.algo.ema(position = 100, short = True, asset = 'ETHUSDT')
 
 ```
 
