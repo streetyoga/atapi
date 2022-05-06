@@ -5,8 +5,9 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 ## Example
 
 ```python
+>>> import atf
+>>> atf.algo_sma(amount, position)
 
-TODO
 ```
 
 ## Development
