@@ -15,9 +15,9 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 
 ```
 ## Installation 
-Install the dependencies in the requirements.txt file manually:
+Install dependencies in the requirements.txt file manually:
 ```
-pip install pandas binance-connector
+pip install -r requirements.txt
 ```
 Or run the cell in the notebook to install the dependencies (commented by default)
 ```python
