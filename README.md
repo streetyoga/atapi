@@ -2,6 +2,9 @@
 
 This project backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
+- Calculate Returns
+- Annualised Risk and Return
+
 ## Examples
 
 ```python
