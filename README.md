@@ -5,7 +5,7 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 - Calculate Returns
 - Annualised Risk and Return
 - Sharpe
-- Best Sharpe through random simulation
+- Best Sharpe Portfolio
 
 ## Examples
 
