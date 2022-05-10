@@ -4,6 +4,7 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 
 - Calculate Returns
 - Annualised Risk and Return
+- Correlation Matrix
 - Sharpe
 - Optimal Sharpe Portfolio
 
