@@ -25,6 +25,36 @@ Install dependencies:
 ```
 pip install -r requirements.txt
 ```
+Instructions on how to setup a your API key for the spot testnet:
+
+[Binance Spot API Key](https://dev.binance.vision/t/9)
+
+Export as environment variables:
+
+Bash/Sh/Zsh:    
+```sh                           
+export BINANCE_API_KEY='your_api_key'           
+export BINANCE_API_SECRET='your_secret_key'      
+
+# Check
+echo $BINANCE_API_KEY
+echo $BINANCE_API_SECRET
+```
+
+Powershell:   
+```powershell                                 
+$env:BINANCE_API_KEY = 'your_api_key'          
+$env:BINANCE_API_SECRET = 'your_secret_key'    
+
+# Check
+$env:BINANCE_API_KEY
+$env:BINANCE_API_KEY
+```
+
+Run notebook from same shell:
+```
+jupyter notebook atf/atf.ipynb
+```
 ## Development
 
 Run `make test`  
