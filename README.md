@@ -6,7 +6,7 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 - Correlation Matrix
 - Optimal Sharpe Portfolio
 - Systematic & Unsystematic Variance
-- beta, CAPM
+- beta, CAPM, alpha
 
 ## Examples
 
