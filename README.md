@@ -3,7 +3,7 @@
 This project backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
 - Annualised Risk σ, Variance and Return
-- Correlation Matrix
+- Correlation Matrix and Covariance
 - Optimal Sharpe Portfolio
 - Systematic & Unsystematic Variance
 - beta, CAPM, alpha
