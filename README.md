@@ -51,9 +51,17 @@ $env:BINANCE_API_KEY
 $env:BINANCE_API_KEY
 ```
 
-Run notebook from same shell:
+Either run interactively in an editor that supports `# %%` syntax like vscode or pyCharm
+
+Or start in your console:
+
+Windows:
 ```
-jupyter notebook atf/atf.ipynb
+py atf/atf.py
+```
+Linux:
+```
+python3 atf/atf.py
 ```
 ## Development
 
