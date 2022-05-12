@@ -7,6 +7,12 @@ import pandas as pd
 import numpy as np
 import scipy.optimize as sco
 from binance.spot import Spot as Client
+import requests
+
+mc_url = 'https://www.binance.com'
+url_path = "/exchange-api/v2/public/asset-service/product/get-products"
+url = mc_url + url_path
+
 pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
@@ -28,6 +34,11 @@ columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 
 # assets= [pd.DataFrame((c[4] for c in client.klines(symbol, "1d")),columns=[symbol]) for symbol in symbols]
 assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
                    for symbol in symbols]), axis=1, keys=symbols)
+# Get Market Capitalization find a solution to iterate through symbols
+response = requests.get(url)
+data = response.json()
+value = next((item for item in data['data'] if item['s'] == 'BTCUSDT'), None)
+print(f"MarketCap BTCUSDT: {float(value['c']) * value['cs']}\n")
 
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
