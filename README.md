@@ -89,7 +89,7 @@ Date
 2022-05-11 29098.2900 2000.0000 271.6000  92.2000   0.0730   0.4880
 2022-05-12 28402.0900 1950.1700 270.0000  62.9000   0.0717   0.4890
 
->>> at.circulating_supply
+>>> at.circulating_supply # Circulating Supply
          Circ. Supply
 BTCUSDT      19037643
 LTCUSDT      70266694
