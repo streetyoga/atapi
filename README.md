@@ -123,15 +123,6 @@ LTCUSDT   0.2887  -0.1622  -0.0037   1.0000   0.4572   0.3381
 TRXUSDT   0.7533   0.1850  -0.0909   0.4572   1.0000   0.7900
 XRPUSDT   0.8035   0.1829   0.2522   0.3381   0.7900   1.0000
 
->>> at.optimal_weights # Optimal weights for tangency portfolio
-         Opt. Weights
-BTCUSDT        0.0000
-ETHUSDT        0.0000
-BNBUSDT        1.0000
-XRPUSDT        0.0000
-TRXUSDT        0.0000
-LTCUSDT        0.0000
-
 >>> at.covar # Annualized covariance
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT      TP
 BTCUSDT   0.8077   1.8020   1.7050   0.8256   1.2483   0.7520  1.7050
