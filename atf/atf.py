@@ -9,10 +9,9 @@ import scipy.optimize as sco
 from binance.spot import Spot as Client
 import requests
 
-mc_url = 'https://www.binance.com'
-url_path = "/exchange-api/v2/public/asset-service/product/get-products"
-url = mc_url + url_path
-
+mc_base = 'https://www.binance.com'
+mc_path = '/exchange-api/v2/public/asset-service/product/get-products'
+mc_url = mc_base + mc_path  # Only for Circulating Supply Data
 pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
@@ -34,20 +33,22 @@ columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 
 # assets= [pd.DataFrame((c[4] for c in client.klines(symbol, "1d")),columns=[symbol]) for symbol in symbols]
 assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
                    for symbol in symbols]), axis=1, keys=symbols)
-# Get Market Capitalization find a solution to iterate through symbols
-response = requests.get(url)
+# Circulating Supply
+response = requests.get(mc_url)
 data = response.json()
-value = next((item for item in data['data'] if item['s'] == 'BTCUSDT'), None)
-print(f"MarketCap BTCUSDT: {float(value['c']) * value['cs']}\n")
+circulating_supply = [item['cs'] for item in data['data']
+                      for symbol in symbols if item['s'] == symbol]
 
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
 assets = assets.set_index(pd.to_datetime(assets['Close time', 'BTCUSDT'], unit='ms').dt.strftime(
     '%Y-%m-%d'))  # Set close time as index, needs improvement
-assets.index.name = 'Close time'
+assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 print(f'Close Price\n{assets_close}\n')
-
+# Simplified MarketCap, only last Circulating Supply taken into account.
+marketcap = assets_close.mul(circulating_supply)
+print(f'Market Capitalisation\n{marketcap}\n')
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
