@@ -42,17 +42,19 @@ $env:BINANCE_API_KEY
 $env:BINANCE_API_KEY
 ```
 
-Either run interactively in an editor that supports `# %%` syntax like vscode or pyCharm
-
-Or start in your console:
-
 Windows:
 ```
-py atf/atf.py
+py
+```
+```python
+>>> import atf
 ```
 Linux:
 ```
-python3 atf/atf.py
+python3
+```
+```python
+>>> import atf
 ```
 
 ## Examples
