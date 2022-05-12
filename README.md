@@ -114,15 +114,6 @@ Date
 2022-05-11  -0.0639  -0.3317  -0.1615   0.1583   0.0000   0.0033 -0.1615
 2022-05-12  -0.0242  -0.0252  -0.0059  -0.3824  -0.0184   0.0020 -0.0059
 
->>> at.mean_returns # Mean returns over testnet period
-         Mean Returns
-BTCUSDT       -0.0416
-ETHUSDT       -0.0513
-BNBUSDT       -0.0509
-XRPUSDT       -0.0623
-TRXUSDT       -0.0206
-LTCUSDT       -0.0183
-
 >>> at.correlation # Correlation matrix
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT
 BTCUSDT   1.0000   0.6878   0.2120   0.2887   0.7533   0.8035
