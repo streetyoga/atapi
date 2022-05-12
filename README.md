@@ -92,13 +92,13 @@ Date
 2022-05-12 28402.0900 1950.1700 270.0000  62.9000   0.0717   0.4890
 
 >>> atf.circulating_supply
-BTCUSDT       19037643
-LTCUSDT       70266694
-TRXUSDT    98189195103
-XRPUSDT    48343101197
-BNBUSDT      163276975
-ETHUSDT      120743491
-dtype: int64
+         Circ. Supply
+BTCUSDT      19037643
+LTCUSDT      70266694
+TRXUSDT   98189195103
+XRPUSDT   48343101197
+BNBUSDT     163276975
+ETHUSDT     120743491
 
 >>> atf.marketcap # Daily market capitalisation of all coins on testnet
                  BTCUSDT       ETHUSDT      BNBUSDT      XRPUSDT     TRXUSDT     LTCUSDT
@@ -126,13 +126,13 @@ Date
 2022-05-12  -0.0242  -0.0252  -0.0059  -0.3824  -0.0184   0.0020 -0.0059
 
 >>> atf.mean_returns # Mean returns over testnet period
-BTCUSDT   -0.0413
-ETHUSDT   -0.0513
-BNBUSDT   -0.0480
-LTCUSDT   -0.0657
-TRXUSDT   -0.0233
-XRPUSDT   -0.0348
-dtype: float64
+         Mean Returns
+BTCUSDT       -0.0416
+ETHUSDT       -0.0513
+BNBUSDT       -0.0509
+XRPUSDT       -0.0623
+TRXUSDT       -0.0206
+LTCUSDT       -0.0183
 
 >>> atf.correlation # Correlation matrix
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT
@@ -144,13 +144,13 @@ TRXUSDT   0.7533   0.1850  -0.0909   0.4572   1.0000   0.7900
 XRPUSDT   0.8035   0.1829   0.2522   0.3381   0.7900   1.0000
 
 >>> atf.optimal_weights # Optimal weights for tangency portfolio
-BTCUSDT   0.0000
-ETHUSDT   0.0000
-BNBUSDT   1.0000
-LTCUSDT   0.0000
-TRXUSDT   0.0000
-XRPUSDT   0.0000
-dtype: float64
+         Opt. Weights
+BTCUSDT        0.0000
+ETHUSDT        0.0000
+BNBUSDT        1.0000
+XRPUSDT        0.0000
+TRXUSDT        0.0000
+LTCUSDT        0.0000
 
 >>> atf.covar # Annualized covariance
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT      TP
