@@ -44,6 +44,7 @@ $env:BINANCE_API_KEY
 
 Windows:
 ```
+cd atf
 py
 ```
 ```python
@@ -51,6 +52,7 @@ py
 ```
 Linux:
 ```
+cd atf
 python3
 ```
 ```python
