@@ -2,12 +2,14 @@
 
 This project backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
+- Daily Close Prices
+- Daily Logarithmic Returns, Mean Returns
+- Tangency Portfolio with optimal weights
 - Market Capitalisation
 - Annualised Risk σ, Variance and Return
 - Correlation Matrix and Covariance
-- Optimal Sharpe Portfolio
 - Systematic & Unsystematic Variance
-- beta, CAPM, alpha
+- Sharpe, beta, CAPM, alpha
 
 ## Installation 
 Install dependencies:
