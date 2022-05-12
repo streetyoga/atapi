@@ -48,7 +48,7 @@ cd atf
 py
 ```
 ```python
->>> import atf
+>>> import atf as at
 ```
 Linux:
 ```
@@ -56,18 +56,18 @@ cd atf
 python3
 ```
 ```python
->>> import atf
+>>> import atf as at
 ```
 
 ## Examples
 
 ```python
->>> import atf
+>>> import atf as at
 
 >>> atf.servertime # Time on Binance testserver
 Timestamp('2022-05-12 11:48:20.183000')
 
->>> atf.balance # Balance on Binance testserver
+>>> at.balance # Balance on Binance testserver
   asset             free      locked
 0   BNB    1000.00000000  0.00000000
 1   BTC       1.00000000  0.00000000
@@ -78,7 +78,7 @@ Timestamp('2022-05-12 11:48:20.183000')
 6  USDT   10000.00000000  0.00000000
 7   XRP   50000.00000000  0.00000000
 
->>> atf.assets_close # Daily Close Prices
+>>> at.assets_close # Daily Close Prices
               BTCUSDT   ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT
 Date
 2022-05-04 39695.8000 2940.6700 402.6000 106.4000   0.0863   0.6461
@@ -91,7 +91,7 @@ Date
 2022-05-11 29098.2900 2000.0000 271.6000  92.2000   0.0730   0.4880
 2022-05-12 28402.0900 1950.1700 270.0000  62.9000   0.0717   0.4890
 
->>> atf.circulating_supply
+>>> at.circulating_supply
          Circ. Supply
 BTCUSDT      19037643
 LTCUSDT      70266694
@@ -100,7 +100,7 @@ XRPUSDT   48343101197
 BNBUSDT     163276975
 ETHUSDT     120743491
 
->>> atf.marketcap # Daily market capitalisation of all coins on testnet
+>>> at.marketcap # Daily market capitalisation of all coins on testnet
                  BTCUSDT       ETHUSDT      BNBUSDT      XRPUSDT     TRXUSDT     LTCUSDT
 Date
 2022-05-04  755714468999  355066761678  65735310135  31234477683  8473727537  7476376241
@@ -113,7 +113,7 @@ Date
 2022-05-11  553962856930  241486982000  44346026410  23591433384  7165847458  6478589186
 2022-05-12  544684480861  235470333843  44378681805  19042347561  7174684486  4630575134
 
->>> atf.returns # Daily returns, including tangency portfolio
+>>> at.returns # Daily returns, including tangency portfolio
             BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT      TP
 Date
 2022-05-05  -0.0825  -0.0678  -0.0617  -0.0935  -0.1465  -0.0769 -0.0617
@@ -125,7 +125,7 @@ Date
 2022-05-11  -0.0639  -0.3317  -0.1615   0.1583   0.0000   0.0033 -0.1615
 2022-05-12  -0.0242  -0.0252  -0.0059  -0.3824  -0.0184   0.0020 -0.0059
 
->>> atf.mean_returns # Mean returns over testnet period
+>>> at.mean_returns # Mean returns over testnet period
          Mean Returns
 BTCUSDT       -0.0416
 ETHUSDT       -0.0513
@@ -134,7 +134,7 @@ XRPUSDT       -0.0623
 TRXUSDT       -0.0206
 LTCUSDT       -0.0183
 
->>> atf.correlation # Correlation matrix
+>>> at.correlation # Correlation matrix
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT
 BTCUSDT   1.0000   0.6878   0.2120   0.2887   0.7533   0.8035
 ETHUSDT   0.6878   1.0000   0.2045  -0.1622   0.1850   0.1829
@@ -143,7 +143,7 @@ LTCUSDT   0.2887  -0.1622  -0.0037   1.0000   0.4572   0.3381
 TRXUSDT   0.7533   0.1850  -0.0909   0.4572   1.0000   0.7900
 XRPUSDT   0.8035   0.1829   0.2522   0.3381   0.7900   1.0000
 
->>> atf.optimal_weights # Optimal weights for tangency portfolio
+>>> at.optimal_weights # Optimal weights for tangency portfolio
          Opt. Weights
 BTCUSDT        0.0000
 ETHUSDT        0.0000
@@ -152,7 +152,7 @@ XRPUSDT        0.0000
 TRXUSDT        0.0000
 LTCUSDT        0.0000
 
->>> atf.covar # Annualized covariance
+>>> at.covar # Annualized covariance
          BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT      TP
 BTCUSDT   0.8077   1.8020   1.7050   0.8256   1.2483   0.7520  1.7050
 ETHUSDT   1.8020   8.4996   5.3378  -1.4974   0.9944   0.5557  5.3378
@@ -162,7 +162,7 @@ TRXUSDT   1.2483   0.9944  -1.4996   2.6699   3.3990   1.5177 -1.4996
 XRPUSDT   0.7520   0.5557   2.3488   1.1158   1.5177   1.0857  2.3488
 TP        1.7050   5.3378  80.1968  -0.0676  -1.4996   2.3488 80.1968
 
->>> atf.stats # Various key statistics
+>>> at.stats # Various key statistics
           Return   Risk   Sharpe  Variance  Sys. Var.  Unsys. Var.    beta     CAPM    alpha
 BTCUSDT -15.7346 0.8987 -17.5427    0.8077     1.7050      -0.8973  0.0213  -0.3535 -15.3811
 ETHUSDT -18.7520 2.9154  -6.4427    8.4996     5.3378       3.1618  0.0666  -1.1728 -17.5792
