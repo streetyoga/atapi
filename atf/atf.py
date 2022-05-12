@@ -26,7 +26,7 @@ servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
 balance = pd.json_normalize(client.account()['balances'])
 
 # %% All kline fields for selected assets
-symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'LTCUSDT', 'TRXUSDT', 'XRPUSDT']
+symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT']
 columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume',
            'Number of trades', 'Taker buy base asset volume', 'Taker buy quote asset volume', 'Ignore']
 # assets= [pd.DataFrame((c[4] for c in client.klines(symbol, "1d")),columns=[symbol]) for symbol in symbols]
@@ -35,8 +35,8 @@ assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
 # Circulating Supply
 response = requests.get(mc_url)
 data = response.json()
-circulating_supply = [item['cs'] for item in data['data']
-                      for symbol in symbols if item['s'] == symbol]
+circulating_supply = {symbol: item['cs'] for item in data['data']
+                      for symbol in symbols if item['s'] == symbol}
 
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
@@ -47,6 +47,7 @@ assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Simplified MarketCap, only last Circulating Supply taken into account.
 # Windows astype(int) defautls to int32 contrary to linux
 marketcap = assets_close.mul(circulating_supply).astype('int64')
+marketcap.sum(axis=1)
 
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
