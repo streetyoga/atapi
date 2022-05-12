@@ -3,6 +3,7 @@
 
 # %% Algorithmic Trading Framework
 import os
+from statistics import covariance
 import pandas as pd
 import numpy as np
 import scipy.optimize as sco
@@ -19,12 +20,10 @@ pd.options.display.float_format = '{:.4f}'.format
 # Synchronize with timeserver if time is off, ommit base_url to default to api.binance.com
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
-print('Server Time')
-print(pd.to_datetime(client.time()['serverTime'], unit='ms'), '\n')
+servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
 
 # %%
 balance = pd.json_normalize(client.account()['balances'])
-print(f'Balance\n{balance}\n')
 
 # %% All kline fields for selected assets
 symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'LTCUSDT', 'TRXUSDT', 'XRPUSDT']
@@ -45,18 +44,16 @@ assets = assets.set_index(pd.to_datetime(assets['Close time', 'BTCUSDT'], unit='
     '%Y-%m-%d'))  # Set close time as index, needs improvement
 assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
-print(f'Close Price\n{assets_close}\n')
 # Simplified MarketCap, only last Circulating Supply taken into account.
 marketcap = assets_close.mul(circulating_supply)
-print(f'Market Capitalisation\n{marketcap}\n')
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
 returns = np.log(assets_close / assets_close.shift(1)).dropna()
-print(f'Daily Mean Returns\n{returns.mean(axis=0)}\n')
+mean_returns = returns.mean(axis=0)
 
 # %% Correlation Coefficient
-print(f'Correlation Coefficient\n{returns.corr()}\n')
+correlation = returns.corr()
 
 # %%
 riskfree_return = 0.031  # 5 Year Treasury Rate, but testnet resets every month
@@ -89,7 +86,6 @@ optimum
 # %% Optimal Weights
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(index=assets_close.columns, data=optimal_weights)
-print(f'Optimal Weights\n{optimal_weights}\n')
 
 # %%
 portfolio_return(optimal_weights)
@@ -102,17 +98,15 @@ portfolio_risk(optimal_weights)
 
 # %% Tangency Portfolio
 returns['TP'] = returns.dot(optimal_weights)
-print(f'Daily Returns, including Tangency Portfolio\n{returns}\n')
 
 # %% Covariance
-COV = returns.cov() * 365.25
-print(f'Covariance\n{COV}\n')
+covar = returns.cov() * 365.25
 
 # %%
-COV.iloc[:-1, -1].dot(optimal_weights)
+covar.iloc[:-1, -1].dot(optimal_weights)
 
 # %%
-COV.iloc[-1, -1]
+covar.iloc[-1, -1]
 
 # %% Annualised Risk σ, Return, Sharpe & Variance
 
@@ -130,13 +124,12 @@ stats = annualised_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(riskfree_return) / stats['Risk']
 stats['Variance'] = np.power(stats.Risk, 2)
 # Systematic & Unsystematic Risk in Variance
-stats['Sys. Var.'] = COV.iloc[:, -1]
+stats['Sys. Var.'] = covar.iloc[:, -1]
 stats['Unsys. Var.'] = stats['Variance'].sub(stats['Sys. Var.'])
 # Normalize == beta
 stats['beta'] = stats['Sys. Var.'] / stats.loc['TP', 'Sys. Var.']
 # Expected Return
-stats["CAPM"] = riskfree_return + \
+stats['CAPM'] = riskfree_return + \
     (stats.loc["TP", "Return"] - riskfree_return) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
-print(f'Key Measurements\n{stats}')
