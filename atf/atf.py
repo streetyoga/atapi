@@ -45,7 +45,9 @@ assets = assets.set_index(pd.to_datetime(assets['Close time', 'BTCUSDT'], unit='
 assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Simplified MarketCap, only last Circulating Supply taken into account.
-marketcap = assets_close.mul(circulating_supply)
+# Windows astype(int) defautls to int32 contrary to linux
+marketcap = assets_close.mul(circulating_supply).astype('int64')
+
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
