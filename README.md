@@ -62,8 +62,6 @@ python3
 ## Examples
 
 ```python
->>> import atf as at
-
 >>> atf.servertime # Time on Binance testserver
 Timestamp('2022-05-12 11:48:20.183000')
 
