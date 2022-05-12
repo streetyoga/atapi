@@ -35,8 +35,8 @@ assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
 # Circulating Supply
 response = requests.get(mc_url)
 data = response.json()
-circulating_supply = {symbol: item['cs'] for item in data['data']
-                      for symbol in symbols if item['s'] == symbol}
+circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
+                               for symbol in symbols if item['s'] == symbol})
 
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
