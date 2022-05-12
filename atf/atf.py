@@ -36,7 +36,7 @@ assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
 response = requests.get(mc_url)
 data = response.json()
 circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
-                               for symbol in symbols if item['s'] == symbol})
+                               for symbol in symbols if item['s'] == symbol}).to_frame('Circ. Supply')
 
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
@@ -46,14 +46,14 @@ assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Simplified MarketCap, only last Circulating Supply taken into account.
 # Windows astype(int) defautls to int32 contrary to linux
-marketcap = assets_close.mul(circulating_supply).astype('int64')
+marketcap = assets_close.mul(circulating_supply.squeeze()).astype('int64')
 marketcap.sum(axis=1)
 
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
 returns = np.log(assets_close / assets_close.shift(1)).dropna()
-mean_returns = returns.mean(axis=0)
+mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 
 # %% Correlation Coefficient
 correlation = returns.corr()
@@ -88,25 +88,26 @@ optimum
 
 # %% Optimal Weights
 optimal_weights = optimum['x']
-optimal_weights = pd.Series(index=assets_close.columns, data=optimal_weights)
+optimal_weights = pd.Series(
+    index=assets_close.columns, data=optimal_weights).to_frame('Opt. Weights')
 
 # %%
-portfolio_return(optimal_weights)
+portfolio_return(optimal_weights.squeeze())
 
 # %%
-portfolio_risk(optimal_weights)
+portfolio_risk(optimal_weights.squeeze())
 
 # %%
--minimized_sharpe(optimal_weights)
+-minimized_sharpe(optimal_weights.squeeze())
 
 # %% Tangency Portfolio
-returns['TP'] = returns.dot(optimal_weights)
+returns['TP'] = returns.dot(optimal_weights.squeeze())
 
 # %% Covariance
 covar = returns.cov() * 365.25
 
 # %%
-covar.iloc[:-1, -1].dot(optimal_weights)
+covar.iloc[:-1, -1].dot(optimal_weights.squeeze())
 
 # %%
 covar.iloc[-1, -1]
