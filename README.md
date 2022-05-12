@@ -60,22 +60,7 @@ python3
 ```
 
 ## Examples (See Wiki for More)
-
 ```python
->>> atf.servertime # Time on Binance testserver
-Timestamp('2022-05-12 11:48:20.183000')
-
->>> at.balance # Balance on Binance testserver
-  asset             free      locked
-0   BNB    1000.00000000  0.00000000
-1   BTC       1.00000000  0.00000000
-2  BUSD   10000.00000000  0.00000000
-3   ETH     100.00000000  0.00000000
-4   LTC     500.00000000  0.00000000
-5   TRX  500000.00000000  0.00000000
-6  USDT   10000.00000000  0.00000000
-7   XRP   50000.00000000  0.00000000
-
 >>> at.returns # Daily returns, including tangency portfolio
             BTCUSDT  ETHUSDT  BNBUSDT  LTCUSDT  TRXUSDT  XRPUSDT      TP
 Date
