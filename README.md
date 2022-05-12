@@ -43,19 +43,15 @@ $env:BINANCE_API_KEY
 ```
 
 Windows:
-```
+```python
 cd atf
 py
-```
-```python
 >>> import atf as at
 ```
 Linux:
-```
+```python
 cd atf
 python3
-```
-```python
 >>> import atf as at
 ```
 
