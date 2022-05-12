@@ -49,6 +49,7 @@ assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 print(f'Close Price\n{assets_close}\n')
 
 # %% Daily Returns
+# Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
 returns = np.log(assets_close / assets_close.shift(1)).dropna()
 print(f'Daily Mean Returns\n{returns.mean(axis=0)}\n')
@@ -124,7 +125,6 @@ def annualised_risk_return(returns):
     return stats
 
 
-# Risk may not be accurate for mean daily losses > 0.274% ()
 stats = annualised_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(riskfree_return) / stats['Risk']
 stats['Variance'] = np.power(stats.Risk, 2)
