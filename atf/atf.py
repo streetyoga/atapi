@@ -22,10 +22,8 @@ client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
 servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
 
-# %%
+# %% Balance and kline fields for selected assets
 balance = pd.json_normalize(client.account()['balances'])
-
-# %% All kline fields for selected assets
 symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT']
 columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume',
            'Number of trades', 'Taker buy base asset volume', 'Taker buy quote asset volume', 'Ignore']
@@ -58,9 +56,8 @@ mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 # %% Correlation Coefficient
 correlation = returns.corr()
 
-# %%
+# %% Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
 riskfree_return = 0.031  # 5 Year Treasury Rate, but testnet resets every month
-# Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
 asset_qty = len(assets_close.columns)
 
 
