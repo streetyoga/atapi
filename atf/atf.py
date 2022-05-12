@@ -84,33 +84,17 @@ bounds = tuple((0, 1) for x in range(asset_qty))
 optimum = sco.minimize(minimized_sharpe, equal_weights,
                        method='SLSQP', bounds=bounds, constraints=constraint)
 np.set_printoptions(suppress=True)
-optimum
 
 # %% Optimal Weights
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(
     index=assets_close.columns, data=optimal_weights).to_frame('Opt. Weights')
 
-# %%
-portfolio_return(optimal_weights.squeeze())
-
-# %%
-portfolio_risk(optimal_weights.squeeze())
-
-# %%
--minimized_sharpe(optimal_weights.squeeze())
-
 # %% Tangency Portfolio
 returns['TP'] = returns.dot(optimal_weights.squeeze())
 
 # %% Covariance
 covar = returns.cov() * 365.25
-
-# %%
-covar.iloc[:-1, -1].dot(optimal_weights.squeeze())
-
-# %%
-covar.iloc[-1, -1]
 
 # %% Annualised Risk σ, Return, Sharpe & Variance
 
