@@ -45,7 +45,8 @@ assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Simplified MarketCap, only last Circulating Supply taken into account.
 # Windows astype(int) defautls to int32 contrary to linux
 marketcap = assets_close.mul(circulating_supply.squeeze()).astype('int64')
-marketcap.sum(axis=1)
+marketcap_summary = marketcap.sum(axis=1).to_frame('Marketcap Sum.')
+value_weighted_index = marketcap.div(marketcap.sum(axis=1), axis='index')
 
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
