@@ -46,12 +46,29 @@ assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Windows astype(int) defautls to int32 contrary to linux
 marketcap = assets_close.mul(circulating_supply.squeeze()).astype('int64')
 marketcap_summary = marketcap.sum(axis=1).to_frame('Marketcap Sum.')
-value_weighted_index = marketcap.div(marketcap.sum(axis=1), axis='index')
 
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
 returns = np.log(assets_close / assets_close.shift(1)).dropna()
+# Normalized Assets
+normalized = assets_close.div(assets_close.iloc[0]).mul(100)
+# Price Weighted Index
+normalized['PWI'] = assets_close.sum(
+    axis=1).div(assets_close.sum(axis=1)[0]).mul(100)
+returns_index = returns.copy()
+returns_index['Mean'] = returns_index.mean(axis=1)
+normalized['EWI'] = 100
+normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
+normalized['CWI'] = 100
+normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
+                                      ).sum(axis=1).add(1).cumprod().mul(100)
+
+
+weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
+weights_ewi = assets_close.copy()
+weights_ewi.iloc[:] = 1 / 6
+weights_cwi = marketcap.div(marketcap.sum(axis=1), axis='index')
 mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 
 # %% Correlation Coefficient
