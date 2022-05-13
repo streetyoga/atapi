@@ -67,7 +67,8 @@ normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
 
 weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
-weights_ewi.iloc[:] = 1 / 6
+asset_qty = len(assets_close.columns)
+weights_ewi.iloc[:] = 1 / asset_qty
 # Not enough data to annualize, especially in this troubling times :)
 stats_index = np.log(normalized / normalized.shift(1)
                      ).dropna().agg(['mean', 'std']).T
@@ -81,7 +82,6 @@ correlation = returns.corr()
 
 # %% Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
 riskfree_return = 0.031  # 5 Year Treasury Rate, but testnet resets every month
-asset_qty = len(assets_close.columns)
 
 
 def portfolio_return(weights):
