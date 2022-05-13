@@ -141,3 +141,13 @@ stats['CAPM'] = riskfree_return + \
     (stats.loc["TP", "Return"] - riskfree_return) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
+
+# %% MarketCap Portfolio
+returns_mcap = returns.drop(columns=['TP'])
+returns_mcap['MCAP'] = returns_mcap.mul(
+    weights_cwi.shift().dropna()).sum(axis=1)
+stats_mcap = annualised_risk_return(returns_mcap)
+covar_mcap = returns_mcap.cov() * 365.25
+stats_mcap['Sys. Var.'] = covar_mcap.iloc[:, -1]
+stats_mcap['beta'] = stats_mcap['Sys. Var.'] / \
+    stats_mcap.loc['MCAP', 'Sys. Var.']
