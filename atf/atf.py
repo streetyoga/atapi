@@ -3,7 +3,6 @@
 
 # %% Algorithmic Trading Framework
 import os
-from statistics import covariance
 import pandas as pd
 import numpy as np
 import scipy.optimize as sco
@@ -55,12 +54,11 @@ returns = np.log(assets_close / assets_close.shift(1)).dropna()
 normalized = assets_close.div(assets_close.iloc[0]).mul(100)
 # Price Weighted Index
 normalized['PWI'] = assets_close.sum(
-    axis=1).div(assets_close.sum(axis=1)[0]).mul(100)
-returns_index = returns.copy()
-returns_index['Mean'] = returns_index.mean(axis=1)
+    axis=1).div(assets_close.sum(axis=1)[0]).mul(100)normalized.pct_change().dropna()ex.mean(axis=1)
 normalized['EWI'] = 100
 normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
 normalized['CWI'] = 100
+weights_cwi = marketcap.div(marketcap.sum(axis=1), axis='index')
 normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
                                       ).sum(axis=1).add(1).cumprod().mul(100)
 
@@ -68,7 +66,12 @@ normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
 weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
 weights_ewi.iloc[:] = 1 / 6
-weights_cwi = marketcap.div(marketcap.sum(axis=1), axis='index')
+# Not enough data to annualize, especially in this troubling times :)
+stats_index = np.log(normalized / normalized.shift(1)
+                     ).dropna().agg(['mean', 'std']).T
+stats_index.columns = ['Return', 'Risk']
+stats_index['Return'] = stats_index['Return'] * 365.25
+stats_index['Risk'] = stats_index['Risk'] * np.sqrt(365.25)
 mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 
 # %% Correlation Coefficient
