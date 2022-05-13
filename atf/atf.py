@@ -49,7 +49,8 @@ marketcap_summary = marketcap.sum(axis=1).to_frame('Marketcap Sum.')
 # %% Daily Returns
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
-returns = np.log(assets_close / assets_close.shift(1)).dropna()
+returns = np.log(assets_close / assets_close.shift()).dropna()
+print(returns)
 # Normalized Assets
 normalized = assets_close.div(assets_close.iloc[0]).mul(100)
 # Price Weighted Index
@@ -70,7 +71,7 @@ weights_ewi = assets_close.copy()
 asset_qty = len(assets_close.columns)
 weights_ewi.iloc[:] = 1 / asset_qty
 # Not enough data to annualize, especially in this troubling times :)
-stats_index = np.log(normalized / normalized.shift(1)
+stats_index = np.log(normalized / normalized.shift()
                      ).dropna().agg(['mean', 'std']).T
 stats_index.columns = ['Return', 'Risk']
 stats_index['Return'] = stats_index['Return'] * 365.25
