@@ -26,19 +26,18 @@ balance = pd.json_normalize(client.account()['balances'])
 symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT']
 columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume',
            'Number of trades', 'Taker buy base asset volume', 'Taker buy quote asset volume', 'Ignore']
-# assets= [pd.DataFrame((c[4] for c in client.klines(symbol, "1d")),columns=[symbol]) for symbol in symbols]
 assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
                    for symbol in symbols]), axis=1, keys=symbols)
 # Circulating Supply
 response = requests.get(mc_url)
 data = response.json()
 circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
-                               for symbol in symbols if item['s'] == symbol}).to_frame('Circ. Supply')
-
+                                for symbol in symbols if item['s'] == symbol}).to_frame('Circ. Supp.')
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
-assets = assets.set_index(pd.to_datetime(assets['Close time', 'BTCUSDT'], unit='ms').dt.strftime(
-    '%Y-%m-%d'))  # Set close time as index, needs improvement
+# Set close time as index, needs improvement
+assets.set_index(pd.to_datetime(
+    assets['Close time', 'BTCUSDT'], unit='ms').dt.date, inplace=True)
 assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 # Simplified MarketCap, only last Circulating Supply taken into account.
@@ -50,7 +49,6 @@ marketcap_summary = marketcap.sum(axis=1).to_frame('Marketcap Sum.')
 # Risk not accurate with arithmetic returns for mean daily losses > 0.274%
 # returns = assets_close.pct_change().dropna()
 returns = np.log(assets_close / assets_close.shift()).dropna()
-print(returns)
 # Normalized Assets
 normalized = assets_close.div(assets_close.iloc[0]).mul(100)
 # Price Weighted Index
