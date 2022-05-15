@@ -23,11 +23,11 @@ servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
 
 # %% Balance and kline fields for selected assets
 balance = pd.json_normalize(client.account()['balances'])
-symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT']
-columns = ['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume',
-           'Number of trades', 'Taker buy base asset volume', 'Taker buy quote asset volume', 'Ignore']
-assets = pd.concat(([pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
-                   for symbol in symbols]), axis=1, keys=symbols)
+symbols = ('BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT')
+columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 'Quote asset volume',
+           'Number of trades', 'Taker buy base asset volume', 'Taker buy quote asset volume', 'Ignore')
+assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
+                   for symbol in symbols), axis=1, keys=symbols)
 # Circulating Supply
 response = requests.get(mc_url)
 data = response.json()
