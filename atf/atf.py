@@ -16,7 +16,8 @@ pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
 
-# Synchronize with timeserver if time is off, ommit base_url to default to api.binance.com
+# Synchronize with timeserver if time is off
+# TODO base url to default api.binance.com, only if no api key is needed
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
 servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
@@ -35,7 +36,8 @@ circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
                                 for symbol in symbols if item['s'] == symbol}).to_frame('Circ. Supp.')
 # %% Close Price Data for Assets
 assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
-# Set close time as index, needs improvement
+# Set close time as index
+# TODO all assets have same close time, change to selection without asset name
 assets.set_index(pd.to_datetime(
     assets['Close time', 'BTCUSDT'], unit='ms').dt.date, inplace=True)
 assets.index.name = 'Date'
@@ -45,9 +47,7 @@ assets_close = assets["Close"].copy().astype(float)  # Daily close prices
 marketcap = assets_close.mul(circulating_supply.squeeze()).astype('int64')
 marketcap_summary = marketcap.sum(axis=1).to_frame('Marketcap Sum.')
 
-# %% Daily Returns
-# Risk not accurate with arithmetic returns for mean daily losses > 0.274%
-# returns = assets_close.pct_change().dropna()
+# %% Daily Logarithmic Returns
 returns = np.log(assets_close / assets_close.shift()).dropna()
 # Normalized Assets
 normalized = assets_close.div(assets_close.iloc[0]).mul(100)
@@ -68,7 +68,7 @@ weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
 asset_qty = len(assets_close.columns)
 weights_ewi.iloc[:] = 1 / asset_qty
-# Not enough data to annualize, especially in this troubling times :)
+# TODO annualized data needs more than one month, switching to mainnet
 stats_index = np.log(normalized / normalized.shift()
                      ).dropna().agg(['mean', 'std']).T
 stats_index.columns = ['Return', 'Risk']
@@ -80,7 +80,8 @@ mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 correlation = returns.corr()
 
 # %% Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
-riskfree_return = 0.031  # 5 Year Treasury Rate, but testnet resets every month
+# TODO 5 Year Treasury Rate, switching to mainnet for annualized data
+riskfree_return = 0.031
 
 
 def portfolio_return(weights):
@@ -122,7 +123,9 @@ def annualised_risk_return(returns):
     stats = returns.agg(['mean', 'std']).T
     stats.columns = ['Return', 'Risk']
     stats.Return = stats.Return * 365.25  # Trading days + 1/4 leap day.
-    # stats.loc[stats.Return < -1, 'Return'] = -1  # Set losses > 100% to -100%
+    # TODO test if annualized losses stay below 100% with logarithmic returns
+    # TODO and annualized data, otherwiese implement cap
+    # TODO stats.loc[stats.Return < -1, 'Return'] = -1
     stats.Risk = stats.Risk * np.sqrt(365.25)
     return stats
 
