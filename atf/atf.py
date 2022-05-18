@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# %% Algorithmic Trading Framework
+"""Algorithmic Trading Framework"""
+# %%
 import os
 import pandas as pd
 import numpy as np
@@ -9,9 +9,9 @@ import scipy.optimize as sco
 from binance.spot import Spot as Client
 import requests
 
-mc_base = 'https://www.binance.com'
-mc_path = '/exchange-api/v2/public/asset-service/product/get-products'
-mc_url = mc_base + mc_path  # Only for Circulating Supply Data
+MC_BASE = 'https://www.binance.com'
+MC_PATH = '/exchange-api/v2/public/asset-service/product/get-products'
+MC_URL = MC_BASE + MC_PATH  # Only for Circulating Supply Data
 pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
@@ -30,7 +30,7 @@ columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time', 
 assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
                    for symbol in symbols), axis=1, keys=symbols)
 # Circulating Supply
-response = requests.get(mc_url)
+response = requests.get(MC_URL)
 data = response.json()
 circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
                                 for symbol in symbols if item['s'] == symbol}).to_frame('Circ. Supp.')
