@@ -5,4 +5,4 @@ __pycache__
 dist
 atf.egg-info
 env
-.vscode/launch.json
+.vscode
