@@ -37,8 +37,8 @@ assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
                    for symbol in symbols), axis=1, keys=symbols)
 # Circulating Supply
 response = requests.get(MC_URL)
-data = response.json()
-circulating_supply = pd.Series({symbol: item['cs'] for item in data['data']
+data = response.json()['data']
+circulating_supply = pd.Series({symbol: item['cs'] for item in data
                                 for symbol in symbols if
                                 item['s'] == symbol}).to_frame('Circ. Supp.')
 # %% Close Price Data for Assets
