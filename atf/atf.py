@@ -20,7 +20,12 @@ pd.options.display.float_format = '{:.4f}'.format
 # TODO base url to default api.binance.com, only if no api key is needed
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
-servertime = pd.to_datetime(client.time()['serverTime'], unit='ms')
+
+
+def servertime():
+    """return the servertime"""
+    return pd.to_datetime(client.time()['serverTime'], unit='ms')
+
 
 # %% Balance and kline fields for selected assets
 balance = pd.json_normalize(client.account()['balances'])
