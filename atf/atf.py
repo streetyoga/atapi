@@ -49,6 +49,7 @@ assets.set_index(pd.to_datetime(
     assets['Close time', 'BTCUSDT'], unit='ms').dt.date, inplace=True)
 assets.index.name = 'Date'
 assets_close = assets["Close"].copy().astype(float)  # Daily close prices
+asset_qty = len(assets_close.columns)
 # Simplified MarketCap, only last Circulating Supply taken into account.
 # Windows astype(int) defautls to int32 contrary to linux
 marketcap = assets_close.mul(circulating_supply.squeeze()).astype('int64')
@@ -73,7 +74,6 @@ normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
 
 weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
-asset_qty = len(assets_close.columns)
 weights_ewi.iloc[:] = 1 / asset_qty
 # TODO annualized data needs more than one month, switching to mainnet
 stats_index = np.log(normalized / normalized.shift()
