@@ -108,7 +108,7 @@ def minimized_sharpe(weights):
 
 equal_weights = np.full(asset_qty, 1 / asset_qty)
 constraint = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-bounds = tuple((0, 1) for x in range(asset_qty))
+bounds = tuple((0, 1) for _ in range(asset_qty))
 
 # Sequential Least Squares Programming
 optimum = sco.minimize(minimized_sharpe, equal_weights,
