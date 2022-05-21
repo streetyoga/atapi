@@ -135,8 +135,8 @@ def annualised_risk_return(ret):
     stat = ret.agg(['mean', 'std']).T
     stat.columns = ['Return', 'Risk']
     stat.Return = stat.Return * 365.25  # Trading days + 1/4 leap day.
-    # TODO cap might be needed if annualized losses > 100% with log returns
-    # TODO stats.loc[stats.Return < -1, 'Return'] = -1
+    # TODO Cap might be needed if annualized losses > 100% with log returns
+    # stats.loc[stats.Return < -1, 'Return'] = -1
     stat.Risk = stat.Risk * np.sqrt(365.25)
     return stat
 
