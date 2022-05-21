@@ -16,19 +16,22 @@ pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
 
-# Synchronize with timeserver if time is off
-# TODO base url to default api.binance.com, only if no api key is needed
+# API key not needed but keeping for future updates
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
+    'BINANCE_API_SECRET'))
+# Testnet API just for balance
+client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
 
 
+# Synchronize with timeserver if time is off
 def servertime():
     """return the servertime"""
     return pd.to_datetime(client.time()['serverTime'], unit='ms')
 
 
 # %% Balance and kline fields for selected assets
-balance = pd.json_normalize(client.account()['balances'])
+balance = pd.json_normalize(client_test.account()['balances'])
 symbols = ('BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'TRXUSDT', 'LTCUSDT')
 columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
            'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
@@ -75,7 +78,6 @@ normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
 weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
 weights_ewi.iloc[:] = 1 / asset_qty
-# TODO annualized data needs more than one month, switching to mainnet
 stats_index = np.log(normalized / normalized.shift()
                      ).dropna().agg(['mean', 'std']).T
 stats_index.columns = ['Return', 'Risk']
@@ -87,8 +89,7 @@ mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
 correlation = returns.corr()
 
 # %% Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
-# TODO 5 Year Treasury Rate, switching to mainnet for annualized data
-RISKFREE_RETURN = 0.031
+RISKFREE_RETURN = 0.031  # 5 Year Treasury Rate
 
 
 def portfolio_return(weights):
@@ -134,8 +135,7 @@ def annualised_risk_return(ret):
     stat = ret.agg(['mean', 'std']).T
     stat.columns = ['Return', 'Risk']
     stat.Return = stat.Return * 365.25  # Trading days + 1/4 leap day.
-    # TODO test if annualized losses stay below 100% with logarithmic returns
-    # TODO and annualized data, otherwiese implement cap
+    # TODO cap might be needed if annualized losses > 100% with log returns
     # TODO stats.loc[stats.Return < -1, 'Return'] = -1
     stat.Risk = stat.Risk * np.sqrt(365.25)
     return stat
