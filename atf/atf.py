@@ -11,29 +11,29 @@ import requests
 
 MC_BASE = 'https://www.binance.com'
 MC_PATH = '/exchange-api/v2/public/asset-service/product/get-products'
-MC_URL = MC_BASE + MC_PATH  # Only for Circulating Supply Data
+MC_URL = MC_BASE + MC_PATH  # For Circulating Supply Data
 pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
 
 
 class AF:
-    '''Algorithmic Factory'''
+    """Algorithmic Factory"""
 
-    def __init__(self, h_2_o, o_2):
-        self.h_2_o = h_2_o
+    def __init__(self, biofuel, o_2):
+        self.biofuel = biofuel
         self.o_2 = o_2
 
     @staticmethod
     def create():
-        '''Create Algorithms'''
+        """Create Algorithms"""
         raise NotImplementedError('Grand Opening Soon...')
 
 
-# API key not needed but keeping for future updates
+# API key not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
-# Testnet API just for balance
+# Testnet API for balance
 client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
 
@@ -59,7 +59,7 @@ circulating_supply = pd.Series({symbol: item['cs'] for item in data
                                 for symbol in symbols if
                                 item['s'] == symbol}).to_frame('Circ. Supp.')
 # %% Close Price Data for Assets
-assets = assets.swaplevel(axis=1)  # Swapping levels for easier selection
+assets = assets.swaplevel(axis=1)  # Swapping levels for selection
 # Set close time as index
 # TODO all assets have same close time, change to selection without asset name
 assets.set_index(pd.to_datetime(
