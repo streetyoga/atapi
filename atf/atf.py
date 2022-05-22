@@ -20,9 +20,9 @@ pd.options.display.float_format = '{:.4f}'.format
 class AF:
     '''Algorithmic Factory'''
 
-    def __init__(self, h2o, o2):
-        self.h2o = h2o
-        self.o2 = o2
+    def __init__(self, h_2_o, o_2):
+        self.h_2_o = h_2_o
+        self.o_2 = o_2
 
     @staticmethod
     def create():
