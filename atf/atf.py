@@ -16,6 +16,20 @@ pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
 # pd.reset_option('display.float_format')
 
+
+class AF:
+    '''Algorithmic Factory'''
+
+    def __init__(self, h2o, o2):
+        self.h2o = h2o
+        self.o2 = o2
+
+    @staticmethod
+    def create():
+        '''Create Algorithms'''
+        raise NotImplementedError('Grand Opening Soon...')
+
+
 # API key not needed but keeping for future updates
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
