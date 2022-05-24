@@ -30,6 +30,7 @@ class AF:
 
     @staticmethod
     def menu():
+        """Factory Menu"""
         menu = """Enter:
 - 'a' algorithm
 - 's' strategy
@@ -187,7 +188,7 @@ stats['Unsys. Var.'] = stats['Variance'].sub(stats['Sys. Var.'])
 stats['beta'] = stats['Sys. Var.'] / stats.loc['TP', 'Sys. Var.']
 # Expected Return
 stats['CAPM'] = RISKFREE_RETURN + \
-                (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
+    (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
 
@@ -199,4 +200,4 @@ stats_mcap = annualised_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * 365.25
 stats_mcap['Sys. Var.'] = covar_mcap.iloc[:, -1]
 stats_mcap['beta'] = stats_mcap['Sys. Var.'] / \
-                     stats_mcap.loc['MCAP', 'Sys. Var.']
+    stats_mcap.loc['MCAP', 'Sys. Var.']
