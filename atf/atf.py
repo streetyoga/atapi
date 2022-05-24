@@ -43,13 +43,10 @@ Choose: """
                       's': lambda: None,
                       'c': AF.create
                       }.get(user_input)
-            if user_input == 'q':
-                break
-            elif not choice:
-                print('Invalid Input')
-            else:
-                choice()
-
+            if user_input == 'q': break
+            elif choice: choice()
+            else: print('Invalid Input')
+           
 
 # API key not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
