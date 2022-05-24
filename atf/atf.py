@@ -14,7 +14,6 @@ MC_PATH = '/exchange-api/v2/public/asset-service/product/get-products'
 MC_URL = MC_BASE + MC_PATH  # For Circulating Supply Data
 pd.set_option('display.max_rows', 80)
 pd.options.display.float_format = '{:.4f}'.format
-# pd.reset_option('display.float_format')
 
 
 class AF:
@@ -29,10 +28,33 @@ class AF:
         """Create Algorithms"""
         raise NotImplementedError('Grand Opening Soon...')
 
+    @staticmethod
+    def menu():
+        menu = """Enter:
+- 'a' algorithm
+- 's' strategy
+- 'c' create
+- 'q' quit
+Choose: """
+        while True:
+            user_input = input(menu)
+            choice = {'a': lambda: None,
+                      's': lambda: None,
+                      'c': AF.create
+                      }.get(user_input)
+            if user_input == 'q':
+                break
+            elif not choice:
+                print('Invalid Input')
+            else:
+                choice()
+
 
 # API key not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
+
+
 # Testnet API for balance
 client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
@@ -51,7 +73,7 @@ columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
            'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
            'Taker buy quote asset volume', 'Ignore')
 assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=columns)
-                   for symbol in symbols), axis=1, keys=symbols)
+                    for symbol in symbols), axis=1, keys=symbols)
 # Circulating Supply
 response = requests.get(MC_URL)
 data = response.json()['data']
@@ -87,7 +109,6 @@ normalized['CWI'] = 100
 weights_cwi = marketcap.div(marketcap.sum(axis=1), axis='index')
 normalized.iloc[1:, -1] = returns.mul(weights_cwi.shift().dropna()
                                       ).sum(axis=1).add(1).cumprod().mul(100)
-
 
 weights_pwi = assets_close.div(assets_close.sum(axis=1), axis='rows')
 weights_ewi = assets_close.copy()
@@ -141,6 +162,7 @@ returns['TP'] = returns.dot(optimal_weights.squeeze())
 # %% Covariance
 covar = returns.cov() * 365.25
 
+
 # %% Annualised Risk σ, Return, Sharpe & Variance
 
 
@@ -165,7 +187,7 @@ stats['Unsys. Var.'] = stats['Variance'].sub(stats['Sys. Var.'])
 stats['beta'] = stats['Sys. Var.'] / stats.loc['TP', 'Sys. Var.']
 # Expected Return
 stats['CAPM'] = RISKFREE_RETURN + \
-    (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
+                (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
 
@@ -177,4 +199,4 @@ stats_mcap = annualised_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * 365.25
 stats_mcap['Sys. Var.'] = covar_mcap.iloc[:, -1]
 stats_mcap['beta'] = stats_mcap['Sys. Var.'] / \
-    stats_mcap.loc['MCAP', 'Sys. Var.']
+                     stats_mcap.loc['MCAP', 'Sys. Var.']
