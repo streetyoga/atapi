@@ -1,4 +1,0 @@
-pandas
-binance-connector
-scipy
-requests
