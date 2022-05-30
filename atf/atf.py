@@ -45,7 +45,7 @@ Choose: """
                       }.get(user_input)
             if user_input == 'q':
                 break
-            elif not choice:
+            if not choice:
                 print('Invalid Input')
             else:
                 choice()
