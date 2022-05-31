@@ -1,8 +1,8 @@
 *.pyc
-.hypothesis
 .pytest_cache
 __pycache__
 dist
 atf.egg-info
 env
 .vscode
+build

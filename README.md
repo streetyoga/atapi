@@ -12,15 +12,15 @@ This project backtests, forward tests and deploys trading algorithms and strateg
 - Sharpe, beta, CAPM, alpha
 
 ## Installation 
-Install dependencies:
-```
-pip install -r requirements.txt
+```sh
+cd atf
+pip install . 
 ```
 Instructions on how to setup a your API key for the spot testnet:
 
 [Binance Spot API Key](https://dev.binance.vision/t/9)
 
-Export as environment variables:
+Export as environment variables and run interpreter:
 
 Bash/Sh/Zsh:    
 ```sh                           
@@ -30,6 +30,11 @@ export BINANCE_API_SECRET='your_secret_key'
 # Check
 echo $BINANCE_API_KEY
 echo $BINANCE_API_SECRET
+
+python3
+```
+```python
+>>> import atf
 ```
 
 Powershell:   
@@ -40,18 +45,10 @@ $env:BINANCE_API_SECRET = 'your_secret_key'
 # Check
 $env:BINANCE_API_KEY
 $env:BINANCE_API_KEY
-```
 
-Windows:
-```python
-cd atf
 py
->>> import atf
 ```
-Linux:
 ```python
-cd atf
-python3
 >>> import atf
 ```
 
@@ -96,14 +93,10 @@ TP       1.4442 1.2817  1.1026    1.6426     1.6426       0.0000 1.0000 1.4442  
 ## Development
 
 Run:
+```sh
+cd atf
+pip install .[dev]
 ```
-make test
-```
-For Windows install WSL and a distro like kali, then run: 
-```
-kali run make test
-```
-
 
 ## Project 
 

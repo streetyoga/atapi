@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
 """Algorithmic Trading Framework"""
+__version__ = "0.1.0"
 # %%
 import os
 import pandas as pd

@@ -1,26 +1,27 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-authors = [{ name = "Miron Tewfik", email = "miron@street.yoga" }]
-maintainers = [{ name = "streetyoga.capital", email = "miron@street.yoga" }]
 
 [project]
 name = "atf"
 description = "Algorithmic Trading Framework"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
-dependencies = ["pandas", "binance-connector", "scipy", "requests"]
 dynamic = ["version"]
-requires-python = ">=3.5"
+requires-python = ">=3.6"
+authors = [{ name = "Miron Tewfik", email = "miron@street.yoga" }]
+dependencies = ["pandas", "binance-connector", "scipy", "requests"]
 
 [project.optional-dependencies]
 dev = ["flake8", "pytest"]
-
 
 [project.urls]
 homepage = "https://street.yoga"
 documentation = "https://github.com/streetyoga/atf/wiki/Documentation"
 repository = "https://github.com/streetyoga/atf"
+
+[tool.setuptools.dynamic]
+version = { attr = "atf.__version__" }
 
 # test:
 # 	find . -name '*.pyc' -exec rm -f {} \;
