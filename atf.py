@@ -36,8 +36,7 @@ class AF:
 - 'c' create
 - 'q' quit
 Choose: """
-        while True:
-            user_input = input(menu)
+        while user_input := input(menu):
             choice = {'a': lambda: None,
                       's': lambda: None,
                       'c': AF.create
