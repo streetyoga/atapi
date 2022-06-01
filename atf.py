@@ -41,13 +41,10 @@ Choose: """
             choice = {'a': lambda: None,
                       's': lambda: None,
                       'c': AF.create
-                      }.get(user_input)
+                      }.get(user_input, lambda: print('Invalid Input'))
             if user_input == 'q':
                 break
-            if not choice:
-                print('Invalid Input')
-            else:
-                choice()
+            choice()
 
 
 # API key not used
