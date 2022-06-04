@@ -1,6 +1,5 @@
 """Algorithmic Trading Framework"""
 __version__ = "0.1.0"
-import time
 import os
 import sys
 import cmd
@@ -60,6 +59,7 @@ client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
 
 
 class ATFShell(cmd.Cmd):
+    """Line-oriented command interpreter"""
     intro = 'Welcome to the Algorithmic Trading Framework. Type help or ? for commands.\n'
     prompt = 'atf🖖  '
     symbols = ('BTCUSDT', 'ETHUSDT', 'BNBUSDT',
@@ -70,6 +70,7 @@ class ATFShell(cmd.Cmd):
 
     @cached_property
     def assets(self):
+        """Assets, all columns"""
         _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=self.columns)
                             for symbol in self.symbols), axis=1, keys=self.symbols)
         _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
@@ -98,6 +99,7 @@ If your systemtime is off, synchronize with timeserver."""
 
     @cached_property
     def circulating_supply(self):
+        """Circulating Supply"""
         response = requests.get(MC_URL)
         data = response.json()['data']
         return pd.Series({symbol: item['cs'] for item in data
@@ -108,8 +110,9 @@ If your systemtime is off, synchronize with timeserver."""
         """Returns the circulating supply."""
         print(self.circulating_supply)
 
-    @cached_property
+    @property
     def assets_close(self):
+        """Asset close prices"""
         _assets_close = self.assets["Close"].copy().astype(float)
         return _assets_close
 
@@ -119,11 +122,13 @@ If your systemtime is off, synchronize with timeserver."""
 
     @property
     def asset_qty(self):
+        """Asset Quantity"""
         _asset_qty = len(self.assets_close.columns)
         return _asset_qty
 
     @property
     def marketcap(self):
+        """Simplified MarketCap"""
         # Windows astype(int) defautls to int32 contrary to linux
         marketcap = self.assets_close.mul(
             self.circulating_supply.squeeze()).astype('int64')
@@ -149,27 +154,14 @@ If your systemtime is off, synchronize with timeserver."""
         """Daily logarithmic returns."""
         return print(returns)
 
-    @property
-    def normalized(self):
-        _normalized = self.assets_close.div(
-            self.assets_close.iloc[0]).mul(100)
-        _normalized['PWI'] = self.assets_close.sum(
-            axis=1).div(self.assets_close.sum(axis=1)[0]).mul(100)
-        returns_index = returns.copy()
-        returns_index['Mean'] = returns_index.mean(axis=1)
-        _normalized['EWI'] = 100
-        _normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
-        _normalized['CWI'] = 100
-        _normalized.iloc[1:, -1] = returns.mul(self.weights_cwi.shift().dropna()
-                                               ).sum(axis=1).add(1).cumprod().mul(100)
-        return _normalized
-
-    def do_normalized(self, arg):
+    @staticmethod
+    def do_normalized(arg):
         """Normalized assets."""
-        print(self.normalized)
+        print(normalized)
 
     @property
     def weights_cwi(self):
+        """Capital Weights"""
         _weights_cwi = self.marketcap.div(
             self.marketcap.sum(axis=1), axis='index')
         return _weights_cwi
@@ -192,7 +184,7 @@ If your systemtime is off, synchronize with timeserver."""
 
     def do_stats_index(self, arg):
         """Anualized risk/return of all assets."""
-        stats_index = np.log(self.normalized / self.normalized.shift()
+        stats_index = np.log(normalized / normalized.shift()
                              ).dropna().agg(['mean', 'std']).T
         stats_index.columns = ['Return', 'Risk']
         stats_index['Return'] = stats_index['Return'] * 365.25
@@ -213,6 +205,7 @@ If your systemtime is off, synchronize with timeserver."""
 
     @property
     def covar(self):
+        """Covariance"""
         _covar = returns.cov() * 365.25
         return _covar
 
@@ -233,7 +226,8 @@ If your systemtime is off, synchronize with timeserver."""
 
     @staticmethod
     def do_stats(arg):
-        """Return, risk, sharpe, variance, systematic variance, unsystematic variance, beta, CAPM, alpha."""
+        """Return, risk, sharpe, variance, systematic variance,
+unsystematic variance, beta, CAPM, alpha."""
         print(stats)
 
     @staticmethod
@@ -246,6 +240,18 @@ shell = ATFShell()
 
 returns = np.log(shell.assets_close /
                  shell.assets_close.shift()).dropna()
+
+normalized = shell.assets_close.div(
+    shell.assets_close.iloc[0]).mul(100)
+normalized['PWI'] = shell.assets_close.sum(
+    axis=1).div(shell.assets_close.sum(axis=1)[0]).mul(100)
+returns_index = returns.copy()
+returns_index['Mean'] = returns_index.mean(axis=1)
+normalized['EWI'] = 100
+normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
+normalized['CWI'] = 100
+normalized.iloc[1:, -1] = returns.mul(shell.weights_cwi.shift().dropna()
+                                      ).sum(axis=1).add(1).cumprod().mul(100)
 
 
 def portfolio_return(weights):
@@ -263,7 +269,7 @@ def minimized_sharpe(weights):
     return (RISKFREE_RETURN - portfolio_return(weights)) / portfolio_risk(weights)
 
 
-"""Optimal Sharpe Ratio Portfolio (Tangency Portfolio)"""
+# Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
 equal_weights = np.full(shell.asset_qty, 1 / shell.asset_qty)
 constraint = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
 bounds = tuple((0, 1) for _ in range(shell.asset_qty))
@@ -273,11 +279,10 @@ np.set_printoptions(suppress=True)
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(
     index=shell.assets_close.columns, data=optimal_weights).to_frame('Opt. Weights')
-
-
 returns['TP'] = returns.dot(
-    optimal_weights.squeeze())  # Tangency Portfolio
+    optimal_weights.squeeze())
 
+# Annualised Statistics
 stats = shell.annualised_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
     RISKFREE_RETURN) / stats['Risk']
@@ -292,6 +297,7 @@ stats['CAPM'] = RISKFREE_RETURN + \
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
 
+# Marketcap Portfolio
 returns_mcap = returns.drop(columns=['TP'])
 returns_mcap['MCAP'] = returns_mcap.mul(
     shell.weights_cwi.shift().dropna()).sum(axis=1)
