@@ -20,7 +20,7 @@ Instructions on how to setup a your API key for the spot testnet:
 
 [Binance Spot API Key](https://dev.binance.vision/t/9)
 
-Export as environment variables and run interpreter:
+Export as environment variables:
 
 Bash/Sh/Zsh:    
 ```sh                           
