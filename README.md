@@ -1,6 +1,6 @@
 # atf - Algorithmic Trading Framework
 
-This project backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
+This framework backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
 - Daily Close Prices
 - Daily Logarithmic Returns, Mean Returns
@@ -30,13 +30,7 @@ export BINANCE_API_SECRET='your_secret_key'
 # Check
 echo $BINANCE_API_KEY
 echo $BINANCE_API_SECRET
-
-python3
 ```
-```python
->>> import atf
-```
-
 Powershell:   
 ```powershell                                 
 $env:BINANCE_API_KEY = 'your_api_key'          
@@ -45,50 +39,67 @@ $env:BINANCE_API_SECRET = 'your_secret_key'
 # Check
 $env:BINANCE_API_KEY
 $env:BINANCE_API_KEY
-
-py
 ```
-```python
->>> import atf
+Run:
+```sh
+python -m atf
+```
+```sh
+Welcome to the Algorithmic Trading Framework. Type help or ? for commands.
+
+atf🖖
 ```
 
 ## Examples (See Wiki for More)
-```python
->>> atf.returns # Daily returns, including tangency portfolio
+```sh
+atf🖖 help
+
+Documented commands (type help <topic>):
+========================================
+assets_close        correlation  marketcap_summary  returns      stats_mcap
+balance             covariance   mean_returns       servertime   weights_cwi
+bye                 help         normalized         stats        weights_ewi
+circulating_supply  marketcap    optimal_weights    stats_index  weights_pwi
+```
+```sh
+atf🖖 returns
             BTCUSDT  ETHUSDT  BNBUSDT  XRPUSDT  TRXUSDT  LTCUSDT      TP
 Date
-2021-01-08   0.0288  -0.0065  -0.0283  -0.0111  -0.0179   0.0166 -0.0283
-2021-01-09  -0.0123   0.0474   0.0346   0.0120   0.1066   0.0290  0.0346
-2021-01-10  -0.0496  -0.0172  -0.0335  -0.0290  -0.0321  -0.0414 -0.0335
-2021-01-11  -0.0747  -0.1431  -0.1052  -0.0913  -0.1226  -0.2027 -0.1052
-2021-01-12  -0.0390  -0.0345   0.0023   0.0176  -0.0111  -0.0400  0.0023
+2021-01-23  -0.0267   0.0008   0.0004  -0.0018   0.0235   0.0001  0.0004
+2021-01-24   0.0057   0.1212   0.0221   0.0063   0.0250   0.0240  0.0221
+2021-01-25  -0.0002  -0.0551   0.0002  -0.0215  -0.0168  -0.0283  0.0002
+2021-01-26   0.0066   0.0358   0.0001   0.0029   0.0000  -0.0177  0.0001
+2021-01-27  -0.0669  -0.0975  -0.0231  -0.0692  -0.0437  -0.0952 -0.0231
 ...             ...      ...      ...      ...      ...      ...     ...
-2022-05-17   0.0189   0.0326   0.0298   0.0346   0.0436   0.0840  0.0298
-2022-05-18  -0.0585  -0.0877  -0.0623  -0.0769  -0.0175  -0.1035 -0.0623
-2022-05-19   0.0544   0.0531   0.0653   0.0361   0.0356   0.0884  0.0653
-2022-05-20  -0.0376  -0.0304  -0.0161  -0.0250  -0.0322  -0.0498 -0.0161
-2022-05-21   0.0142   0.0130   0.0364   0.0155   0.0501   0.0245  0.0364
+2022-06-01  -0.0648  -0.0660  -0.0660  -0.0578  -0.0101  -0.0870 -0.0660
+2022-06-02   0.0215   0.0088   0.0260   0.0187   0.0091   0.0283  0.0260
+2022-06-03  -0.0250  -0.0327  -0.0320  -0.0379  -0.0389  -0.0299 -0.0320
+2022-06-04   0.0055   0.0165   0.0090   0.0054  -0.0083   0.0174  0.0090
+2022-06-05  -0.0003   0.0005  -0.0013   0.0025  -0.0022   0.0016 -0.0013
 
 [499 rows x 7 columns]
-
->>> atf.correlation # Correlation matrix
-         BTCUSDT  ETHUSDT  BNBUSDT  XRPUSDT  TRXUSDT  LTCUSDT
-BTCUSDT   1.0000   0.8184   0.6702   0.6158   0.6762   0.8066
-ETHUSDT   0.8184   1.0000   0.6905   0.6319   0.6888   0.8259
-BNBUSDT   0.6702   0.6905   1.0000   0.5819   0.6095   0.6878
-XRPUSDT   0.6158   0.6319   0.5819   1.0000   0.6440   0.7064
-TRXUSDT   0.6762   0.6888   0.6095   0.6440   1.0000   0.7311
-LTCUSDT   0.8066   0.8259   0.6878   0.7064   0.7311   1.0000
-
->>> atf.stats # Various key statistics
+```
+```sh
+atf🖖 correlation
+         BTCUSDT  ETHUSDT  BNBUSDT  XRPUSDT  TRXUSDT  LTCUSDT     TP
+BTCUSDT   1.0000   0.8185   0.6730   0.6215   0.6770   0.8043 0.6730
+ETHUSDT   0.8185   1.0000   0.6970   0.6390   0.6892   0.8268 0.6970
+BNBUSDT   0.6730   0.6970   1.0000   0.5832   0.6057   0.6896 1.0000
+XRPUSDT   0.6215   0.6390   0.5832   1.0000   0.6422   0.7094 0.5832
+TRXUSDT   0.6770   0.6892   0.6057   0.6422   1.0000   0.7249 0.6057
+LTCUSDT   0.8043   0.8268   0.6896   0.7094   0.7249   1.0000 0.6896
+TP        0.6730   0.6970   1.0000   0.5832   0.6057   0.6896 1.0000
+```
+```sh
+atf🖖 stats
          Return   Risk  Sharpe  Variance  Sys. Var.  Unsys. Var.   beta   CAPM   alpha
-BTCUSDT -0.2094 0.7678 -0.3132    0.5895     0.6595      -0.0700 0.4015 0.5984 -0.8078
-ETHUSDT  0.3532 0.9977  0.3230    0.9955     0.8830       0.1125 0.5375 0.7906 -0.4374
-BNBUSDT  1.4442 1.2817  1.1026    1.6426     1.6426       0.0000 1.0000 1.4442  0.0000
-XRPUSDT  0.1841 1.3398  0.1142    1.7952     0.9993       0.7959 0.6083 0.8907 -0.7066
-TRXUSDT  0.6469 1.1672  0.5277    1.3624     0.9118       0.4506 0.5551 0.8154 -0.1685
-LTCUSDT -0.6435 1.1357 -0.5939    1.2899     1.0011       0.2888 0.6095 0.8923 -1.5358
-TP       1.4442 1.2817  1.1026    1.6426     1.6426       0.0000 1.0000 1.4442  0.0000
+BTCUSDT -0.0721 0.7503 -0.1374    0.5630     0.6433      -0.0803 0.3964 0.5978 -0.6699
+ETHUSDT  0.2794 0.9686  0.2564    0.9382     0.8600       0.0782 0.5299 0.7887 -0.5093
+BNBUSDT  1.4609 1.2739  1.1224    1.6229     1.6229      -0.0000 1.0000 1.4609  0.0000
+XRPUSDT  0.2698 1.3363  0.1787    1.7857     0.9929       0.7928 0.6118 0.9058 -0.6359
+TRXUSDT  0.7560 1.1559  0.6272    1.3360     0.8919       0.4441 0.5496 0.8168 -0.0608
+LTCUSDT -0.5629 1.1156 -0.5324    1.2445     0.9801       0.2644 0.6039 0.8945 -1.4574
+TP       1.4609 1.2739  1.1224    1.6229     1.6229      -0.0000 1.0000 1.4609  0.0000
 ```
 ## Development
 
