@@ -1,24 +1,26 @@
 ### Implementation
 
-The project started out as a [JupyterLab Notebook](https://github.com/jupyterlab/jupyterlab) and turned into a [Python](https://github.com/python/cpython) file, ready to be deployed on AWS or other cloud computing platforms.
+The project started out as a [JupyterLab Notebook](https://github.com/jupyterlab/jupyterlab) and turned into a line-oriented command interpreter shell, which is also importable as an [Python](https://github.com/python/cpython) modlule, ready to be deployed on AWS or other cloud computing platforms.
 
 Some example output:
-```python
->>> import atf
->>> atf.marketcap
-                BNBUSDT       BTCUSDT       ETHUSDT      LTCUSDT     TRXUSDT      XRPUSDT
+```sh
+python -m atf
+```
+```sh
+atf🖖 marketcap
+                BNBUSDT       BTCUSDT       ETHUSDT     LTCUSDT     TRXUSDT      XRPUSDT
 Date
-2021-01-07   7114434976  751003782105  148041159042  11910426821  3006676303  15657847046
-2021-01-08   6915759553  772916093070  147081508791  12110164714  2953245868  15485262175
-2021-01-09   7159352472  763496425717  154220871552  12466739051  3285486028  15672349977
-2021-01-10   6923449898  726582619808  151592106696  11961064597  3181539545  15223725997
-2021-01-11   6231857615  674292505364  131379020051   9766760984  2814326736  13895257577
-...                 ...           ...           ...          ...         ...          ...
-2022-05-17  49995409745  579836052491  252690172861   5148173860  7018816249  21174278324
-2022-05-18  46974785707  546894927819  231465464982   4641796104  6897383442  19607961845
-2022-05-19  50142359022  577442044957  244088370801   5070810592  7147049293  20328274053
-2022-05-20  49342301845  556145091060  236779800188   4824654738  6920698541  19825505800
-2022-05-21  51171003965  564117688465  239869052129   4944216153  7276253800  20134901648
+2021-01-22   6676983304  627856464805  149200108943  9695518519  2663398041  13157541852
+2021-01-23   6679807996  611330270204  149318731152  9696222829  2726790084  13133370302
+2021-01-24   6829271739  614796850918  168553685405  9931462055  2795775542  13216520436
+2021-01-25   6830643266  614688222495  159520241091  9653964285  2749163746  12935163587
+2021-01-26   6831443323  618758357971  165341202327  9484930111  2749163746  12972387775
+...                 ...           ...           ...         ...         ...          ...
+2022-06-01  49048403290  568028122312  220050249106  4416017806  7789763399  19240554276
+2022-06-02  50338291392  580354399059  222002673825  4542793437  7860613329  19603127535
+2022-06-03  48754504735  566015256699  214865974418  4408974715  7560433361  18873146707
+2022-06-04  49195352567  569137466256  218431903260  4486448712  7497973554  18974667219
+2022-06-05  49113714080  569394172371  219077062823  4486448712  7502634733  19052016181
 
 [500 rows x 6 columns]
 ```
@@ -27,13 +29,18 @@ Date
 
 Project is planed to be production ready in 2 years and shall remain written purly in Python:
 
-- It uses the official lightweight [binance-connector-python](https://github.com/binance/binance-connector-python) and requests for Market Capitalisation data.
+- It uses the official lightweight [binance-connector-python](https://github.com/binance/binance-connector-python) and [requests](https://pypi.org/project/requests/) for Market Capitalisation data.
+- [binance-futures-connector-python](https://github.com/binance/binance-futures-connector-python) will be implemented next.
 - Consideration of [python-binance](https://github.com/sammchardy/python-binance) and [CCXT](https://github.com/ccxt/ccxt) library. CCXT supports hundreds of exchanges out of the box which should faciliate the implementation of arbitrage among different exchanges, but python-binance (which won a contest sponsored by binance) might have better api support for binance, i.e. implement NFT trading of the official binance API earlier, once it will be supported. The binance public API connector is very basic and a lot of work needs to be implemented in requests
 - decision which algorithm to implement first, probably simple moving average with fixed values.
 - Python script with API keys stored as environment variables. Binance spot testnet for balance, public api for statistics.
 - Securing and encrypting API keys in external file.
 - Reflection on different deployment possibilities beyond running it in a terminal window, like cron jobs, schtasks.exe, Power Automate...
-- Implementation as Python REPL, considerations to implement as [Python IDLE](https://github.com/python/cpython/tree/main/Lib/idlelib) plugin, [Python Fire](https://github.com/google/python-firegoogle) CLI interface, or [rich](https://github.com/Textualize/rich) textual interface.
+- Implemented in [cmd](https://docs.python.org/3/library/cmd.html) from the Python Standard Library, partial support as Python module/REPL.  
+  Other considerations:   
+  [Python IDLE](https://github.com/python/cpython/tree/main/Lib/idlelib) plugin    
+  [Python Fire](https://github.com/google/python-firegoogle) CLI interface   
+  [rich](https://github.com/Textualize/rich) textual interface.  
 - Adding a second algorithm, first draft on how to create own algorithms and trading strategies in the framework, either domain specific or in pure Python.
 - Switching between implemented algorithms, including backtest, forward test and going from test network to main, no leverage.
 - slowly implementing leverage starting with 2x only.
