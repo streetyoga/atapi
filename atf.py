@@ -36,16 +36,13 @@ class AF:
 - 'a' algorithm
 - 's' strategy
 - 'c' create
-- 'q' quit
+- '⏎' back
 Choose: """
         while user_input := input(menu):
-            choice = {'a': lambda: None,
-                      's': lambda: None,
-                      'c': AF.create
-                      }.get(user_input, lambda: print('Invalid Input'))
-            if user_input == 'q':
-                break
-            choice()
+            {'a': lambda: None,
+             's': lambda: None,
+             'c': AF.create
+             }.get(user_input, lambda: print('Invalid Input'))()
 
 
 # API key not used
@@ -79,6 +76,11 @@ class ATFShell(cmd.Cmd):
             _assets['Close time', 'BTCUSDT'], unit='ms').dt.date, inplace=True)
         _assets.index.name = 'Date'
         return _assets
+
+    @staticmethod
+    def do_algorithmic_factory(arg):
+        """Enters Factory"""
+        AF.menu()
 
     @staticmethod
     def do_bye(arg):
@@ -183,7 +185,7 @@ If your systemtime is off, synchronize with timeserver."""
         print(weights_ewi)
 
     def do_stats_index(self, arg):
-        """Anualized risk/return of all assets."""
+        """Anualized risk / return of all assets."""
         stats_index = np.log(normalized / normalized.shift()
                              ).dropna().agg(['mean', 'std']).T
         stats_index.columns = ['Return', 'Risk']
