@@ -1,4 +1,7 @@
-"""Algorithmic Trading Framework"""
+""" streetyoga.capital -
+    A Quantitative Trading Software Company, presents:
+    Algorithmic Trading Framework
+"""
 __version__ = "0.1.1"
 import os
 import sys
@@ -57,7 +60,7 @@ client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
 
 class ATFShell(cmd.Cmd):
     """Line-oriented command interpreter"""
-    intro = 'Welcome to the Algorithmic Trading Framework. Type help or ? for commands.\n'
+    intro = f'Welcome to the Algorithmic Trading Framework v{__version__}. Type help or ? for commands.\n'
     prompt = 'atf🖖  '
     symbols = ('BTCUSDT', 'ETHUSDT', 'BNBUSDT',
                'XRPUSDT', 'TRXUSDT', 'LTCUSDT')
