@@ -107,9 +107,8 @@ If your systemtime is off, synchronize with timeserver."""
         """Circulating Supply"""
         response = requests.get(MC_URL)
         data = response.json()['data']
-        return pd.Series({symbol: item['cs'] for item in data
-                          for symbol in self.symbols if
-                          item['s'] == symbol}).to_frame('Circ. Supp.')
+        return pd.Series({item['s']: item['cs'] for item in data
+                          if item['s'] in self.symbols}).to_frame('Circ. Supp.')
 
     def do_circulating_supply(self, arg):
         """Returns the circulating supply."""
