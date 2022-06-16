@@ -1,5 +1,5 @@
 """connection tests"""
-from atf import requests, client, MC_URL
+from algo import requests, client, MC_URL
 
 
 def test_connection():
