@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -20,8 +20,11 @@ homepage = "https://street.yoga"
 documentation = "https://github.com/streetyoga/atf/wiki/Documentation"
 repository = "https://github.com/streetyoga/atf"
 
-[tool.setuptools.dynamic]
-version = { attr = "atf.__version__" }
+[tool.setuptools_scm]
+
+# [tool.setuptools.dynamic]
+# version = { attr = "atf.__version__" }
+
 
 # test:
 # 	find . -name '*.pyc' -exec rm -f {} \;

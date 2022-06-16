@@ -1,5 +1,5 @@
 """connection tests"""
-from algo import requests, client, MC_URL
+from comp.algo import requests, client, MC_URL
 
 
 def test_connection():

@@ -2,10 +2,9 @@
     A Quantitative Trading Software Company, presents:
     Algorithmic Trading Framework
 """
-__version__ = "0.1.1"
 import sys
 import cmd
-import algo
+from comp import algo
 
 
 class AF:
@@ -38,7 +37,7 @@ Choose: """
 
 class ATFShell(cmd.Cmd):
     """Line-oriented command interpreter"""
-    intro = f'Welcome to the Algorithmic Trading Framework v{__version__}. Type help/? for commands.\n'
+    intro = 'Welcome to the Algorithmic Trading Framework. Type help/? for commands.\n'
     prompt = 'atf🖖  '
 
     @staticmethod
