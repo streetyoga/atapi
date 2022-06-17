@@ -4,7 +4,7 @@ The project started out as a [JupyterLab Notebook](https://github.com/jupyterlab
 
 Some example output:
 ```sh
-python -m atf
+python -m atapi
 ```
 ```sh
 atf🖖 marketcap
