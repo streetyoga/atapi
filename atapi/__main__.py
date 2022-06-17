@@ -4,7 +4,7 @@
 """
 import sys
 import cmd
-from comp import algo
+from .comp import algo
 
 
 class AF:
