@@ -41,8 +41,9 @@ $env:BINANCE_API_KEY
 ```
 Run:
 ```sh
-python -m atf
+python -m atapi
 ```
+```sh
 Welcome to the Algorithmic Trading API. Type help/? for commands.
 
 atf🖖
