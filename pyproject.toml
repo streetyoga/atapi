@@ -20,4 +20,7 @@ homepage = "https://street.yoga"
 documentation = "https://github.com/streetyoga/atapi/wiki/Documentation"
 repository = "https://github.com/streetyoga/atapi"
 
+[tool.setuptools]
+packages = ["atapi", "atapi.comp"]
+
 [tool.setuptools_scm]
