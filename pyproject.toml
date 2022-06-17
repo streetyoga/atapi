@@ -17,20 +17,7 @@ dev = ["flake8", "pytest"]
 
 [project.urls]
 homepage = "https://street.yoga"
-documentation = "https://github.com/streetyoga/atf/wiki/Documentation"
-repository = "https://github.com/streetyoga/atf"
+documentation = "https://github.com/streetyoga/atapi/wiki/Documentation"
+repository = "https://github.com/streetyoga/atapi"
 
 [tool.setuptools_scm]
-
-# [tool.setuptools.dynamic]
-# version = { attr = "atf.__version__" }
-
-
-# test:
-# 	find . -name '*.pyc' -exec rm -f {} \;
-# 	./env/bin/flake8 atf tests
-# 	./env/bin/python3 -m pytest \
-# 	    --doctest-modules \
-# 	    --disable-warnings \
-# 	    --verbose \
-# 	    atf tests
