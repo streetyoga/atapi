@@ -1,4 +1,4 @@
-# atf - Algorithmic Trading Framework
+# Algorithmic Trading Framework
 
 This framework backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
@@ -13,8 +13,7 @@ This framework backtests, forward tests and deploys trading algorithms and strat
 
 ## Installation 
 ```sh
-cd atf
-pip install . 
+pip install atapi 
 ```
 Instructions on how to setup a your API key for the spot testnet:
 
@@ -111,7 +110,7 @@ pip install .[dev]
 
 ## Project 
 
-https://github.com/streetyoga/atf
+https://github.com/streetyoga/atapi
 
 ## License
 
