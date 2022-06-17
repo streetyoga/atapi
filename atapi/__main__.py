@@ -23,10 +23,10 @@ class AF:
     def menu():
         """Factory Menu"""
         menu = """Enter:
-- 'a' algorithm
-- 's' strategy
-- 'c' create
-- '⏎' back
+: a : algorithm
+: s : strategy
+: c : create
+: ↩ : back
 Choose: """
         while user_input := input(menu):
             {'a': lambda: None,
