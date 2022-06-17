@@ -1,6 +1,6 @@
 # Algorithmic Trading API
 
-This framework backtests, forward tests and deploys trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
+Backtest, forward tests and deploy trading algorithms and strategies on binance spot, futures and nft markets and other cryptocurrency exchanges, including arbitrage.
 
 - Daily Close Prices
 - Daily Logarithmic Returns, Mean Returns
