@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "atf"
+name = "atapi"
 description = "Algorithmic Trading Framework"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
