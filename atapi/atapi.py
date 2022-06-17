@@ -1,6 +1,6 @@
 """ streetyoga.capital -
     A Quantitative Trading Software Company, presents:
-    Algorithmic Trading Framework
+    Algorithmic Trading API
 """
 import sys
 import cmd
@@ -37,7 +37,7 @@ Choose: """
 
 class ATFShell(cmd.Cmd):
     """Line-oriented command interpreter"""
-    intro = 'Welcome to the Algorithmic Trading Framework. Type help/? for commands.\n'
+    intro = 'Welcome to the Algorithmic Trading API. Type help/? for commands.\n'
     prompt = 'atf🖖  '
 
     @staticmethod
@@ -47,7 +47,7 @@ class ATFShell(cmd.Cmd):
 
     @staticmethod
     def do_bye(arg):
-        'Exits the framework.'
+        'Exits the API.'
         print('Thank you for using ATF')
         sys.exit()
 

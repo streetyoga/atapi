@@ -43,8 +43,7 @@ Run:
 ```sh
 python -m atf
 ```
-```sh
-Welcome to the Algorithmic Trading Framework. Type help or ? for commands.
+Welcome to the Algorithmic Trading API. Type help/? for commands.
 
 atf🖖
 ```
