@@ -1,5 +1,5 @@
 """connection tests"""
-from comp.algo import requests, client, MC_URL
+from atapi.comp.algo import requests, client, MC_URL
 
 
 def test_connection():
