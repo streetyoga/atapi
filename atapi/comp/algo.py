@@ -37,7 +37,7 @@ class Algo:
         response = requests.get(MC_URL)
         data = response.json()['data']
         return pd.Series({item['s']: item['cs'] for item in data
-                          if item['s'] in self.symbols}).to_frame('Circ. Supp.')
+                          if item['s'] in self.symbols}, name='Circulating Supply')
 
     @staticmethod
     def balance():
@@ -80,7 +80,7 @@ If your systemtime is off, synchronize with timeserver."""
         """Simplified MarketCap"""
         # Windows astype(int) defautls to int32 contrary to linux
         marketcap = self.assets_close.mul(
-            self.circulating_supply.squeeze()).astype('int64')
+            self.circulating_supply).astype('int64')
         return marketcap
 
     def marketcap_summary(self):
@@ -190,9 +190,9 @@ optimum = sco.minimize(minimized_sharpe, equal_weights,
 np.set_printoptions(suppress=True)
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(
-    index=algo.assets_close.columns, data=optimal_weights).to_frame('Opt. Weights')
+    index=algo.assets_close.columns, data=optimal_weights, name='Optimal Weights')
 returns['TP'] = returns.dot(
-    optimal_weights.squeeze())
+    optimal_weights)
 
 # Annualised Statistics
 stats = algo.annualised_risk_return(returns)
