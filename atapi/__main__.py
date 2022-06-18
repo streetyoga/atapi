@@ -48,7 +48,7 @@ class ATFShell(cmd.Cmd):
     @staticmethod
     def do_bye(arg):
         'Exits the API.'
-        print('Thank you for using ATF')
+        print('Thank you for using 𝔞𝔱𝔞𝔭𝔦')
         sys.exit()
 
     @staticmethod
@@ -59,88 +59,105 @@ class ATFShell(cmd.Cmd):
     @staticmethod
     def do_balance(arg):
         """Balance and kline fields for selected assets."""
-        print(algo_class.balance())
+        print(algo_class.balance().to_markdown(
+            tablefmt='rst', floatfmt='.2f', showindex=False))
 
     @staticmethod
     def do_circulating_supply(arg):
         """Returns the circulating supply."""
-        print(algo_class.circulating_supply)
+        print(algo_class.circulating_supply.to_markdown(
+            tablefmt='rst', floatfmt='.0f'))
 
     @staticmethod
     def do_assets_close(arg):
         """Daily close price data for assets."""
-        print(algo_class.assets_close)
+        print(algo_class.assets_close.to_markdown(
+            tablefmt='rst', floatfmt='.2f'))
 
     @staticmethod
     def do_marketcap(arg):
         """Simplified marketcap, only with last circulating supply."""
-        print(algo_class.marketcap)
+        print(algo_class.marketcap.to_markdown(
+            tablefmt='rst', floatfmt='.0f'))
 
-    @staticmethod
+    @ staticmethod
     def do_marketcap_summary(arg):
         """Daily marketcap summary of all assets."""
-        print(algo_class.marketcap_summary())
+        print(algo_class.marketcap_summary.to_markdown(
+            tablefmt='rst', floatfmt='.0f'))
 
-    @staticmethod
+    @ staticmethod
     def do_optimal_weights(arg):
         """Optimal weights calculated with sequential least squares programming."""
-        print(algo.optimal_weights)
+        print(algo.optimal_weights.to_markdown(
+            tablefmt='rst', floatfmt='.0f'))
 
-    @staticmethod
+    @ staticmethod
     def do_returns(arg):
         """Daily logarithmic returns."""
-        return print(algo.returns)
+        return print(algo.returns.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_normalized(arg):
         """Normalized assets."""
-        print(algo.normalized)
+        print(algo.normalized.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_weights_cwi(arg):
         """Capital weighted index."""
-        print(algo_class.weights_cwi)
+        print(algo_class.weights_cwi.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_weights_pwi(arg):
         """Price weighted index."""
-        print(algo_class.weights_pwi())
+        print(algo_class.weights_pwi.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_weights_ewi(arg):
         """Equal weighted index."""
-        print(algo_class.weights_ewi())
+        print(algo_class.weights_ewi.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_stats_index(arg):
         """Anualized risk / return of all assets."""
-        print(algo_class.stats_index())
+        print(algo_class.stats_index().to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_mean_returns(arg):
         """Daily Mean Returns Of All Assets."""
-        print(algo_class.mean_returns())
+        print(algo_class.mean_returns().to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_correlation(arg):
         """Correlation Coefficient"""
-        print(algo_class.correlation())
+        print(algo_class.correlation().to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_covariance(arg):
         """Covariance."""
-        print(algo_class.covar)
+        print(algo_class.covar.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_stats(arg):
         """Return, risk, sharpe, variance, systematic variance,
 unsystematic variance, beta, CAPM, alpha."""
-        print(algo.stats)
+        print(algo.stats.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
-    @staticmethod
+    @ staticmethod
     def do_stats_mcap(arg):
         """Marketcap portfolio."""
-        print(algo.stats_mcap)
+        print(algo.stats_mcap.to_markdown(
+            tablefmt='rst', floatfmt='.4f'))
 
 
 if __name__ == '__main__':

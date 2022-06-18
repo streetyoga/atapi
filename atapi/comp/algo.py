@@ -6,12 +6,12 @@ import pandas as pd
 import scipy.optimize as sco
 import requests
 from binance.spot import Spot as Client
-pd.options.display.float_format = '{:.4f}'.format
 
 MC_BASE = 'https://www.binance.com'
 MC_PATH = '/exchange-api/v2/public/asset-service/product/get-products'
 MC_URL = MC_BASE + MC_PATH  # For Circulating Supply Data
 RISKFREE_RETURN = 0.031  # 5 Year Treasury Rate
+TD = 365.25  # Trading days + 1/4 leap day.
 
 # API key not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
@@ -78,15 +78,15 @@ If your systemtime is off, synchronize with timeserver."""
     @property
     def marketcap(self):
         """Simplified MarketCap"""
-        # Windows astype(int) defautls to int32 contrary to linux
         marketcap = self.assets_close.mul(
-            self.circulating_supply).astype('int64')
+            self.circulating_supply)
         return marketcap
 
+    @property
     def marketcap_summary(self):
         """Daily marketcap summary of all assets."""
         marketcap_summary = self.marketcap.sum(
-            axis=1).to_frame('Marketcap Sum.')
+            axis=1).rename('Total MarketCap')
         return marketcap_summary
 
     @property
@@ -97,12 +97,14 @@ If your systemtime is off, synchronize with timeserver."""
             self.marketcap.sum(axis=1), axis='index')
         return _weights_cwi
 
+    @property
     def weights_pwi(self):
         """Price weighted index."""
         weights_pwi = self.assets_close.div(
             self.assets_close.sum(axis=1), axis='rows')
         return weights_pwi
 
+    @property
     def weights_ewi(self):
         """Equal weighted index."""
         weights_ewi = self.assets_close.copy()
@@ -112,29 +114,29 @@ If your systemtime is off, synchronize with timeserver."""
     @staticmethod
     def stats_index():
         """Anualized risk / return of all assets."""
-        stats_index = np.log(normalized / normalized.shift()
-                             ).dropna().agg(['mean', 'std']).T
-        stats_index.columns = ['Return', 'Risk']
-        stats_index['Return'] = stats_index['Return'] * 365.25
-        stats_index['Risk'] = stats_index['Risk'] * np.sqrt(365.25)
-        return stats_index
+        _stats_index = np.log(normalized / normalized.shift()
+                              ).dropna().agg(['mean', 'std']).T
+        _stats_index.columns = ['Return', 'Risk']
+        _stats_index['Return'] = _stats_index['Return'] * TD
+        _stats_index['Risk'] = _stats_index['Risk'] * np.sqrt(TD)
+        return _stats_index
 
     @staticmethod
     def mean_returns():
         """Daily Mean Returns Of All Assets."""
-        mean_returns = returns.mean(axis=0).to_frame('Mean Returns')
-        return mean_returns
+        _mean_returns = returns.mean(axis=0).rename('Mean Returns')
+        return _mean_returns
 
     @staticmethod
     def correlation():
         """Correlation Coefficient"""
-        correlation = returns.corr()
-        return correlation
+        _correlation = returns.corr()
+        return _correlation
 
     @property
     def covar(self):
         """Covariance"""
-        _covar = returns.cov() * 365.25
+        _covar = returns.cov() * TD
         return _covar
 
     @staticmethod
@@ -142,10 +144,10 @@ If your systemtime is off, synchronize with timeserver."""
         """Annualized Risk σ, Return"""
         stat = ret.agg(['mean', 'std']).T
         stat.columns = ['Return', 'Risk']
-        stat.Return = stat.Return * 365.25  # Trading days + 1/4 leap day.
+        stat.Return = stat.Return * TD
         # TODO Cap might be needed if annualized losses > 100% with log returns
         # stats.loc[stats.Return < -1, 'Return'] = -1
-        stat.Risk = stat.Risk * np.sqrt(365.25)
+        stat.Risk = stat.Risk * np.sqrt(TD)
         return stat
 
 
@@ -168,12 +170,12 @@ normalized.iloc[1:, -1] = returns.mul(algo.weights_cwi.shift().dropna()
 
 def portfolio_return(weights):
     """Annualized Portfolio Return"""
-    return returns.dot(weights.T).mean() * 365.25
+    return returns.dot(weights.T).mean() * TD
 
 
 def portfolio_risk(weights):
     """Annualized Portfolio Risk"""
-    return returns.dot(weights.T).std() * np.sqrt(365.25)
+    return returns.dot(weights.T).std() * np.sqrt(TD)
 
 
 def minimized_sharpe(weights):
@@ -187,7 +189,6 @@ constraint = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
 bounds = tuple((0, 1) for _ in range(algo.asset_qty))
 optimum = sco.minimize(minimized_sharpe, equal_weights,
                        method='SLSQP', bounds=bounds, constraints=constraint)
-np.set_printoptions(suppress=True)
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(
     index=algo.assets_close.columns, data=optimal_weights, name='Optimal Weights')
@@ -214,7 +215,7 @@ returns_mcap = returns.drop(columns=['TP'])
 returns_mcap['MCAP'] = returns_mcap.mul(
     algo.weights_cwi.shift().dropna()).sum(axis=1)
 stats_mcap = algo.annualised_risk_return(returns_mcap)
-covar_mcap = returns_mcap.cov() * 365.25
+covar_mcap = returns_mcap.cov() * TD
 stats_mcap['Sys. Var.'] = covar_mcap.iloc[:, -1]
 stats_mcap['beta'] = stats_mcap['Sys. Var.'] / \
     stats_mcap.loc['MCAP', 'Sys. Var.']
