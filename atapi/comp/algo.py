@@ -58,8 +58,8 @@ If your systemtime is off, synchronize with timeserver."""
                             for symbol in self.symbols), axis=1, keys=self.symbols)
         _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
         # TODO all assets have same close time, change to selection without asset name
-        _assets.set_index(pd.to_datetime(
-            _assets['Close time', 'BTCUSDT'], unit='ms').dt.date, inplace=True)
+        _assets = _assets.set_index(pd.to_datetime(
+            _assets['Close time', 'BTCUSDT'], unit='ms').dt.date)
         _assets.index.name = 'Date'
         return _assets
 
