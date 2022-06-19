@@ -43,14 +43,14 @@ Run:
 ```sh
 python -m atapi
 ```
-```sh
+```
 Welcome to the Algorithmic Trading API. Type help/? for commands.
 
 atf🖖
 ```
 
 ## Examples (See Wiki for More)
-```sh
+```
 atf🖖 help
 
 Documented commands (type help <topic>):
@@ -60,7 +60,7 @@ balance             covariance   mean_returns       servertime   weights_cwi
 bye                 help         normalized         stats        weights_ewi
 circulating_supply  marketcap    optimal_weights    stats_index  weights_pwi
 ```
-```sh
+```
 atf🖖 help stats
 Return, risk, sharpe, variance, systematic variance,
 unsystematic variance, beta, CAPM, alpha.
