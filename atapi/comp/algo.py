@@ -198,11 +198,11 @@ returns['TP'] = returns.dot(
 stats = algo.annualised_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
     RISKFREE_RETURN) / stats['Risk']
-stats['Variance'] = np.power(stats.Risk, 2)
-stats['Sys. Var.'] = algo.covar.iloc[:, -1]
-stats['Unsys. Var.'] = stats['Variance'].sub(stats['Sys. Var.'])
-stats['beta'] = stats['Sys. Var.'] / \
-    stats.loc['TP', 'Sys. Var.']  # Normalize == beta
+stats['Var'] = np.power(stats.Risk, 2)
+stats['SysVar'] = algo.covar.iloc[:, -1]
+stats['UnsysVar'] = stats['Var'].sub(stats['SysVar'])
+stats['beta'] = stats['SysVar'] / \
+    stats.loc['TP', 'SysVar']  # Normalize == beta
 # Expected Return
 stats['CAPM'] = RISKFREE_RETURN + \
     (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
@@ -215,6 +215,6 @@ returns_mcap['MCAP'] = returns_mcap.mul(
     algo.weights_cwi.shift().dropna()).sum(axis=1)
 stats_mcap = algo.annualised_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * TD
-stats_mcap['Sys. Var.'] = covar_mcap.iloc[:, -1]
-stats_mcap['beta'] = stats_mcap['Sys. Var.'] / \
-    stats_mcap.loc['MCAP', 'Sys. Var.']
+stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]
+stats_mcap['beta'] = stats_mcap['SysVar'] / \
+    stats_mcap.loc['MCAP', 'SysVar']
