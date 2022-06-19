@@ -117,7 +117,8 @@ class ATFShell(cmd.Cmd):
     @staticmethod
     def do_normalized(arg):
         """Normalized Asset Returns Base 100."""
-        table = Table('Normalized Returns')
+        table = Table(
+            'Normalized Returns, Price Weighed, Equal Weighted, Capitalization Weighted')
         table.add_row(algo.normalized.to_string(
             float_format=lambda _: '{:.4f}'.format(_)))
         console.print(table)
@@ -173,7 +174,7 @@ class ATFShell(cmd.Cmd):
     @staticmethod
     def do_covariance(arg):
         """Covariance."""
-        table = Table('Covariance')
+        table = Table('Annualized Covariance')
         table.add_row(algo_class.covar.to_string(
             float_format=lambda _: '{:.4f}'.format(_)))
         console.print(table)
