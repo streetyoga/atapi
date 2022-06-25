@@ -136,7 +136,7 @@ If your systemtime is off, synchronize with timeserver."""
     @staticmethod
     def mean_returns():
         """Daily Mean Returns Of All Assets."""
-        _mean_returns = returns.mean(axis=0).rename('Mean Returns')
+        _mean_returns = returns.mean().rename('Mean Returns')
         return _mean_returns
 
     @staticmethod
