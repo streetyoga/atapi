@@ -125,7 +125,7 @@ If your systemtime is off, synchronize with timeserver."""
 
     @staticmethod
     def stats_index():
-        """Anualized risk / return of all assets."""
+        """Annualized risk & return of all assets."""
         _stats_index = np.log(normalized / normalized.shift()
                               ).dropna().agg(['mean', 'std']).T
         _stats_index.columns = ['Return', 'Risk']
@@ -152,7 +152,7 @@ If your systemtime is off, synchronize with timeserver."""
         return _covar
 
     @staticmethod
-    def annualised_risk_return(ret):
+    def annualized_risk_return(ret):
         """Annualized Risk σ, Return"""
         stat = ret.agg(['mean', 'std']).T
         stat.columns = ['Return', 'Risk']
@@ -207,8 +207,8 @@ optimal_weights = pd.Series(
 returns['TP'] = returns.dot(
     optimal_weights)
 
-# Annualised Statistics
-stats = algo.annualised_risk_return(returns)
+# Annualized Statistics
+stats = algo.annualized_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
     rfr) / stats['Risk']
 stats['Var'] = np.power(stats.Risk, 2)
@@ -226,7 +226,7 @@ stats['alpha'] = stats.Return - stats.CAPM
 returns_mcap = returns.drop(columns=['TP'])
 returns_mcap['MCAP'] = returns_mcap.mul(
     algo.weights_cwi.shift().dropna()).sum(axis=1)
-stats_mcap = algo.annualised_risk_return(returns_mcap)
+stats_mcap = algo.annualized_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * TD
 stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]
 stats_mcap['beta'] = stats_mcap['SysVar'] / \
