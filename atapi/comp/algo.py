@@ -20,7 +20,7 @@ def riskfree_return():
     """Riskfree Return"""
     response = requests.get(TR_URL+'?sort=-record_date&page[size]=1')
     data = response.json()['data'][0]['avg_interest_rate_amt']
-    return float(data)
+    return float(data)/100
 
 
 rfr = riskfree_return()  # T-Bill Average Interest Rate
