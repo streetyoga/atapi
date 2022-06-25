@@ -183,7 +183,7 @@ class ATFShell(cmd.Cmd):
     def do_stats(arg):
         """Return, risk, sharpe, variance, systematic variance,
 unsystematic variance, beta, CAPM, alpha."""
-        table = Table('Modern Portfolio Theory')
+        table = Table('Anualised Modern Portfolio Theory Metrics')
         table.add_row(algo.stats.to_string(
             float_format=lambda _: '{:.4f}'.format(_)))
         console.print(table)
@@ -200,7 +200,6 @@ unsystematic variance, beta, CAPM, alpha."""
 if __name__ == '__main__':
 
     algo_class = algo.Algo()
-
-    shell = ATFShell()
     console = Console()
+    shell = ATFShell()
     shell.cmdloop()
