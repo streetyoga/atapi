@@ -8,10 +8,23 @@ import requests
 from binance.spot import Spot as Client
 
 MC_BASE = 'https://www.binance.com'
-MC_PATH = '/exchange-api/v2/public/asset-service/product/get-products'
-MC_URL = MC_BASE + MC_PATH  # For Circulating Supply Data
-RISKFREE_RETURN = 0.031  # 5 Year Treasury Rate
+MC_EP = '/exchange-api/v2/public/asset-service/product/get-products'
+MC_URL = MC_BASE + MC_EP  # For Circulating Supply Data
+TR_BASE = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/'
+TR_EP = 'v2/accounting/od/avg_interest_rates'
+TR_URL = TR_BASE + TR_EP
 TD = 365.25  # Trading days + 1/4 leap day.
+
+
+def riskfree_return():
+    """Riskfree Return"""
+    response = requests.get(TR_URL+'?sort=-record_date&page[size]=1')
+    data = response.json()['data'][0]['avg_interest_rate_amt']
+    return float(data)
+
+
+rfr = riskfree_return()  # T-Bill Average Interest Rate
+
 
 # API key not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
@@ -179,7 +192,7 @@ def portfolio_risk(weights):
 
 def minimized_sharpe(weights):
     """Sharpe Ratio * (-1)"""
-    return (RISKFREE_RETURN - portfolio_return(weights)) / portfolio_risk(weights)
+    return (rfr - portfolio_return(weights)) / portfolio_risk(weights)
 
 
 # Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
@@ -197,15 +210,15 @@ returns['TP'] = returns.dot(
 # Annualised Statistics
 stats = algo.annualised_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
-    RISKFREE_RETURN) / stats['Risk']
+    rfr) / stats['Risk']
 stats['Var'] = np.power(stats.Risk, 2)
 stats['SysVar'] = algo.covar.iloc[:, -1]
 stats['UnsysVar'] = stats['Var'].sub(stats['SysVar'])
 stats['beta'] = stats['SysVar'] / \
     stats.loc['TP', 'SysVar']  # Normalize == beta
 # Expected Return
-stats['CAPM'] = RISKFREE_RETURN + \
-    (stats.loc["TP", "Return"] - RISKFREE_RETURN) * stats.beta
+stats['CAPM'] = rfr + \
+    (stats.loc["TP", "Return"] - rfr) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
 
