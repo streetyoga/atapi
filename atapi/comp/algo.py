@@ -31,31 +31,19 @@ client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
 
 
-# Testnet API for balance
-client_test = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
-    'BINANCE_API_SECRET'), base_url='https://testnet.binance.vision')
-
-
 class Algo:
     """Quantitative Analysis"""
-    symbols = ('BTCUSDT', 'ETHUSDT', 'BNBUSDT',
-               'XRPUSDT', 'TRXUSDT', 'LTCUSDT')
     columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
                'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
                'Taker buy quote asset volume', 'Ignore')
 
-    @cached_property
-    def circulating_supply(self):
+    @staticmethod
+    def circulating_supply():
         """Circulating Supply"""
         response = requests.get(MC_URL)
         data = response.json()['data']
-        return pd.Series({item['s']: item['cs'] for item in data
-                          if item['s'] in self.symbols}, name='Circulating Supply')
-
-    @staticmethod
-    def balance():
-        """Balance and kline fields for selected assets."""
-        return pd.json_normalize(client_test.account()['balances'])
+        return pd.Series({item['s']: item['cs'] for item in data if item['s'].endswith('USDT')}, name='Circulating Supply')
+    symbols = circulating_supply().index.values.tolist()
 
     @staticmethod
     def servertime():
@@ -67,15 +55,13 @@ If your systemtime is off, synchronize with timeserver."""
     @cached_property
     def assets(self):
         """Assets, all columns"""
-        _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=self.columns)
-                            for symbol in self.symbols), axis=1, keys=self.symbols)
+        _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=self.columns).set_index('Open time')
+                            for symbol in self.symbols[:3]), axis=1, keys=self.symbols[:3])
         _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
-        _assets = _assets.set_index(pd.to_datetime(
-            _assets.iloc[:, 6], unit='ms').dt.date)
+        _assets.index = pd.to_datetime(_assets.index, unit='ms')
         _assets.index.name = 'Date'
         return _assets
 
-    @property
     def assets_close(self):
         """Asset close prices"""
         _assets_close = self.assets["Close"].copy().astype(float)
@@ -84,42 +70,39 @@ If your systemtime is off, synchronize with timeserver."""
     @property
     def asset_qty(self):
         """Asset Quantity"""
-        _asset_qty = len(self.assets_close.columns)
+        _asset_qty = len(self.assets_close().columns)
         return _asset_qty
 
-    @property
     def marketcap(self):
         """Simplified MarketCap"""
-        marketcap = self.assets_close.mul(
-            self.circulating_supply)
-        return marketcap
+        _marketcap = self.assets_close().mul(
+            self.circulating_supply()[:3])
+        return _marketcap
 
-    @property
     def marketcap_summary(self):
         """Daily marketcap summary of all assets."""
-        marketcap_summary = self.marketcap.sum(
+        _marketcap_summary = self.marketcap().sum(
             axis=1).rename('Total MarketCap')
-        return marketcap_summary
+        return _marketcap_summary
 
-    @property
     def weights_cwi(self):
         # TODO use marketcap_summmary()
         """Capital Weights"""
-        _weights_cwi = self.marketcap.div(
-            self.marketcap.sum(axis=1), axis='index')
+        _weights_cwi = self.marketcap().div(
+            self.marketcap().sum(axis=1), axis='index')
         return _weights_cwi
 
     @property
     def weights_pwi(self):
         """Price weighted index."""
-        weights_pwi = self.assets_close.div(
-            self.assets_close.sum(axis=1), axis='rows')
+        weights_pwi = self.assets_close().div(
+            self.assets_close().sum(axis=1), axis='rows')
         return weights_pwi
 
     @property
     def weights_ewi(self):
         """Equal weighted index."""
-        weights_ewi = self.assets_close.copy()
+        weights_ewi = self.assets_close().copy()
         weights_ewi.iloc[:] = 1 / self.asset_qty
         return weights_ewi
 
@@ -157,26 +140,26 @@ If your systemtime is off, synchronize with timeserver."""
         stat = ret.agg(['mean', 'std']).T
         stat.columns = ['Return', 'Risk']
         stat.Return = stat.Return * TD
-        # TODO Cap might be needed if annualized losses > 100% with log returns
+        # TODO Cap needed if annualized losses > 100% even with log returns
         # stats.loc[stats.Return < -1, 'Return'] = -1
         stat.Risk = stat.Risk * np.sqrt(TD)
         return stat
 
 
 algo = Algo()
-returns = np.log(algo.assets_close /
-                 algo.assets_close.shift()).dropna()
+returns = np.log(algo.assets_close() /
+                 algo.assets_close().shift()).dropna()
 
-normalized = algo.assets_close.div(
-    algo.assets_close.iloc[0]).mul(100)
-normalized['PWI'] = algo.assets_close.sum(
-    axis=1).div(algo.assets_close.sum(axis=1)[0]).mul(100)
+normalized = algo.assets_close().div(
+    algo.assets_close().iloc[0]).mul(100)
+normalized['PWI'] = algo.assets_close().sum(
+    axis=1).div(algo.assets_close().sum(axis=1)[0]).mul(100)
 returns_index = returns.copy()
 returns_index['Mean'] = returns_index.mean(axis=1)
 normalized['EWI'] = 100
 normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
 normalized['CWI'] = 100
-normalized.iloc[1:, -1] = returns.mul(algo.weights_cwi.shift().dropna()
+normalized.iloc[1:, -1] = returns.mul(algo.weights_cwi().shift().dropna()
                                       ).sum(axis=1).add(1).cumprod().mul(100)
 
 
@@ -203,7 +186,7 @@ optimum = sco.minimize(minimized_sharpe, equal_weights,
                        method='SLSQP', bounds=bounds, constraints=constraint)
 optimal_weights = optimum['x']
 optimal_weights = pd.Series(
-    index=algo.assets_close.columns, data=optimal_weights, name='Optimal Weights')
+    index=algo.assets_close().columns, data=optimal_weights, name='Optimal Weights')
 returns['TP'] = returns.dot(
     optimal_weights)
 
@@ -225,7 +208,7 @@ stats['alpha'] = stats.Return - stats.CAPM
 # Marketcap Portfolio
 returns_mcap = returns.drop(columns=['TP'])
 returns_mcap['MCAP'] = returns_mcap.mul(
-    algo.weights_cwi.shift().dropna()).sum(axis=1)
+    algo.weights_cwi().shift().dropna()).sum(axis=1)
 stats_mcap = algo.annualized_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * TD
 stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]

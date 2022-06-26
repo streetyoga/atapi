@@ -61,41 +61,34 @@ class ATFShell(cmd.Cmd):
         console.print(table)
 
     @staticmethod
-    def do_balance(arg):
-        """Balance and kline fields for selected assets."""
-        table = Table('Assets Balance')
-        table.add_row(algo_class.balance().astype({'free': 'float', 'locked': 'float'}).to_string(
-            float_format=lambda _: '{:.2f}'.format(_), index=False))
-        console.print(table)
-
-    @staticmethod
     def do_circulating_supply(arg):
         """Returns the circulating supply."""
         table = Table('Circulating Supply')
-        table.add_row(algo_class.circulating_supply.to_string())
+        table.add_row(algo_class.circulating_supply().to_string(
+            float_format=lambda _: '{:,.0f}'.format(_)))
         console.print(table)
 
     @staticmethod
     def do_assets_close(arg):
         """Daily close price data for assets."""
         table = Table('Assets Close Prices')
-        table.add_row(algo_class.assets_close.to_string())
+        table.add_row(algo_class.assets_close().to_string())
         console.print(table)
 
     @staticmethod
     def do_marketcap(arg):
         """Simplified marketcap, only with last circulating supply."""
         table = Table('Market Cap')
-        table.add_row(algo_class.marketcap.astype({symbol: 'float' for symbol in algo_class.symbols}).to_string(
-                      float_format=lambda _: '{:.0f}'.format(_)))
+        table.add_row(algo_class.marketcap().to_string(
+                      float_format=lambda _: '{:,.0f}'.format(_)))
         console.print(table)
 
     @staticmethod
     def do_marketcap_summary(arg):
         """Daily marketcap summary of all assets."""
         table = Table('Crypto Market Cap')
-        table.add_row(algo_class.marketcap_summary.to_string(
-            float_format=lambda _: '{:.0f}'.format(_)))
+        table.add_row(algo_class.marketcap_summary().to_string(
+            float_format=lambda _: '{:,.0f}'.format(_)))
         console.print(table)
 
     @staticmethod
@@ -127,7 +120,7 @@ class ATFShell(cmd.Cmd):
     def do_weights_cwi(arg):
         """Capital weighted index."""
         table = Table('Capital Weighted Index')
-        table.add_row(algo_class.weights_cwi.to_string(
+        table.add_row(algo_class.weights_cwi().to_string(
             float_format=lambda _: '{:.4f}'.format(_)))
         console.print(table)
 
