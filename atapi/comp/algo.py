@@ -26,7 +26,7 @@ def riskfree_return():
 rfr = riskfree_return()  # T-Bill Average Interest Rate
 
 
-# API key not used
+# API key currently not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
 
@@ -44,7 +44,7 @@ class Algo:
         data = response.json()['data']
         return pd.Series({item['s']: item['cs'] for item in data if item['s'].endswith('USDT')},
                          name='Circulating Supply')
-    symbols = circulating_supply().index.values.tolist()
+    symbols = circulating_supply().index.values.tolist()[:3]
 
     @staticmethod
     def servertime():
@@ -58,7 +58,7 @@ If your systemtime is off, synchronize with timeserver."""
         """Assets, all columns"""
         _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"),
                                           columns=self.columns).set_index('Open time')
-                            for symbol in self.symbols[:3]), axis=1, keys=self.symbols[:3])
+                            for symbol in self.symbols), axis=1, keys=self.symbols)
         _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
         _assets.index = pd.to_datetime(_assets.index, unit='ms')
         _assets.index.name = 'Date'
@@ -110,7 +110,7 @@ If your systemtime is off, synchronize with timeserver."""
 
     @staticmethod
     def stats_index():
-        """Annualized risk & return of all assets."""
+        """Annual risk & return of all assets."""
         _stats_index = np.log(normalized / normalized.shift()
                               ).dropna().agg(['mean', 'std']).T
         _stats_index.columns = ['Return', 'Risk']
@@ -137,12 +137,12 @@ If your systemtime is off, synchronize with timeserver."""
         return _covar
 
     @staticmethod
-    def annualized_risk_return(ret):
-        """Annualized Risk σ, Return"""
+    def annual_risk_return(ret):
+        """Annual Risk σ, Return"""
         stat = ret.agg(['mean', 'std']).T
         stat.columns = ['Return', 'Risk']
         stat.Return = stat.Return * TD
-        # TODO Cap needed if annualized losses > 100% even with log returns
+        # TODO Cap needed if annual losses > 100% even with log returns
         # stats.loc[stats.Return < -1, 'Return'] = -1
         stat.Risk = stat.Risk * np.sqrt(TD)
         return stat
@@ -166,12 +166,12 @@ normalized.iloc[1:, -1] = returns.mul(algo.weights_cwi().shift().dropna()
 
 
 def portfolio_return(weights):
-    """Annualized Portfolio Return"""
+    """Annual Portfolio Return"""
     return returns.dot(weights.T).mean() * TD
 
 
 def portfolio_risk(weights):
-    """Annualized Portfolio Risk"""
+    """Annual Portfolio Risk"""
     return returns.dot(weights.T).std() * np.sqrt(TD)
 
 
@@ -192,8 +192,8 @@ optimal_weights = pd.Series(
 returns['TP'] = returns.dot(
     optimal_weights)
 
-# Annualized Statistics
-stats = algo.annualized_risk_return(returns)
+# Annual Statistics
+stats = algo.annual_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
     rfr) / stats['Risk']
 stats['Var'] = np.power(stats.Risk, 2)
@@ -211,7 +211,7 @@ stats['alpha'] = stats.Return - stats.CAPM
 returns_mcap = returns.drop(columns=['TP'])
 returns_mcap['MCAP'] = returns_mcap.mul(
     algo.weights_cwi().shift().dropna()).sum(axis=1)
-stats_mcap = algo.annualized_risk_return(returns_mcap)
+stats_mcap = algo.annual_risk_return(returns_mcap)
 covar_mcap = returns_mcap.cov() * TD
 stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]
 stats_mcap['beta'] = stats_mcap['SysVar'] / \

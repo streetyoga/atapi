@@ -40,7 +40,7 @@ Choose: """
 class ATFShell(cmd.Cmd):
     """Line-oriented command interpreter"""
     intro = 'Welcome to the Algorithmic Trading API. Type help/? for commands.\n'
-    prompt = 'atf🖖  '
+    prompt = '𝔞𝔱𝔞𝔭𝔦     \r'
 
     @staticmethod
     def do_algorithmic_factory(arg):
