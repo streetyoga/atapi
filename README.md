@@ -15,30 +15,7 @@ Backtest, forward tests and deploy trading algorithms and strategies on binance 
 ```sh
 pip install atapi 
 ```
-Instructions on how to setup a your API key for the spot testnet:
 
-[Binance Spot API Key](https://dev.binance.vision/t/9)
-
-Export as environment variables:
-
-Bash/Sh/Zsh:    
-```sh                           
-export BINANCE_API_KEY='your_api_key'           
-export BINANCE_API_SECRET='your_secret_key'      
-
-# Check
-echo $BINANCE_API_KEY
-echo $BINANCE_API_SECRET
-```
-Powershell:   
-```powershell                                 
-$env:BINANCE_API_KEY = 'your_api_key'          
-$env:BINANCE_API_SECRET = 'your_secret_key'    
-
-# Check
-$env:BINANCE_API_KEY
-$env:BINANCE_API_KEY
-```
 Run:
 ```sh
 python -m atapi
@@ -55,10 +32,10 @@ atf🖖 help
 
 Documented commands (type help <topic>):
 ========================================
-assets_close        correlation  marketcap_summary  returns      stats_mcap
-balance             covariance   mean_returns       servertime   weights_cwi
-bye                 help         normalized         stats        weights_ewi
-circulating_supply  marketcap    optimal_weights    stats_index  weights_pwi
+algorithmic_factory  correlation  marketcap_summary  returns      stats_mcap
+assets_close         covariance   mean_returns       servertime   weights_cwi
+bye                  help         normalized         stats        weights_ewi
+circulating_supply   marketcap    optimal_weights    stats_index  weights_pwi
 ```
 ```
 atf🖖 help stats
