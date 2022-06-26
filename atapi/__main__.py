@@ -4,9 +4,9 @@
 """
 import sys
 import cmd
-from .comp import algo
 from rich.console import Console
 from rich.table import Table
+from .comp import algo
 
 
 class AF:
@@ -65,7 +65,7 @@ class ATFShell(cmd.Cmd):
         """Returns the circulating supply."""
         table = Table('Circulating Supply')
         table.add_row(algo_class.circulating_supply().to_string(
-            float_format=lambda _: '{:,.0f}'.format(_)))
+            float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
     @staticmethod
@@ -80,7 +80,7 @@ class ATFShell(cmd.Cmd):
         """Simplified marketcap, only with last circulating supply."""
         table = Table('Market Cap')
         table.add_row(algo_class.marketcap().to_string(
-                      float_format=lambda _: '{:,.0f}'.format(_)))
+                      float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
     @staticmethod
@@ -88,7 +88,7 @@ class ATFShell(cmd.Cmd):
         """Daily marketcap summary of all assets."""
         table = Table('Crypto Market Cap')
         table.add_row(algo_class.marketcap_summary().to_string(
-            float_format=lambda _: '{:,.0f}'.format(_)))
+            float_format=lambda _: '{_:,.0f}'))
         console.print(table)
 
     @staticmethod
@@ -96,7 +96,7 @@ class ATFShell(cmd.Cmd):
         """Optimal weights calculated with sequential least squares programming."""
         table = Table('Optimal Weights')
         table.add_row(algo.optimal_weights.to_string(
-            float_format=lambda _: '{:.0f}'.format(_)))
+            float_format=lambda _: f'{_:.0f}'))
         console.print(table)
 
     @staticmethod
@@ -104,7 +104,7 @@ class ATFShell(cmd.Cmd):
         """Daily logarithmic returns."""
         table = Table('Log Returns')
         table.add_row(algo.returns.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -113,7 +113,7 @@ class ATFShell(cmd.Cmd):
         table = Table(
             'Normalized Returns, Price Weighed, Equal Weighted, Capitalization Weighted')
         table.add_row(algo.normalized.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -121,7 +121,7 @@ class ATFShell(cmd.Cmd):
         """Capital weighted index."""
         table = Table('Capital Weighted Index')
         table.add_row(algo_class.weights_cwi().to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -129,7 +129,7 @@ class ATFShell(cmd.Cmd):
         """Price weighted index."""
         table = Table('Price Weighted Index')
         table.add_row(algo_class.weights_pwi.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -137,7 +137,7 @@ class ATFShell(cmd.Cmd):
         """Equal weighted index."""
         table = Table('Equal Weighted Index')
         table.add_row(algo_class.weights_ewi.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -145,7 +145,7 @@ class ATFShell(cmd.Cmd):
         """Anualized risk / return of all assets."""
         table = Table('Anualized Risk & Return')
         table.add_row(algo_class.stats_index().to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -153,7 +153,7 @@ class ATFShell(cmd.Cmd):
         """Daily Mean Returns Of All Assets."""
         table = Table('Daily Mean Returns')
         table.add_row(algo_class.mean_returns().to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -161,7 +161,7 @@ class ATFShell(cmd.Cmd):
         """Correlation Coefficient"""
         table = Table('Correlation Coefficient')
         table.add_row(algo_class.correlation().to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -169,7 +169,7 @@ class ATFShell(cmd.Cmd):
         """Covariance."""
         table = Table('Annualized Covariance')
         table.add_row(algo_class.covar.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -178,7 +178,7 @@ class ATFShell(cmd.Cmd):
 unsystematic variance, beta, CAPM, alpha."""
         table = Table('Anualized Modern Portfolio Theory Metrics')
         table.add_row(algo.stats.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
     @staticmethod
@@ -186,7 +186,7 @@ unsystematic variance, beta, CAPM, alpha."""
         """Marketcap portfolio."""
         table = Table('Market Cap Portfolio')
         table.add_row(algo.stats_mcap.to_string(
-            float_format=lambda _: '{:.4f}'.format(_)))
+            float_format=lambda _: '{_:.4f}'))
         console.print(table)
 
 

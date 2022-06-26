@@ -42,7 +42,8 @@ class Algo:
         """Circulating Supply"""
         response = requests.get(MC_URL)
         data = response.json()['data']
-        return pd.Series({item['s']: item['cs'] for item in data if item['s'].endswith('USDT')}, name='Circulating Supply')
+        return pd.Series({item['s']: item['cs'] for item in data if item['s'].endswith('USDT')},
+                         name='Circulating Supply')
     symbols = circulating_supply().index.values.tolist()
 
     @staticmethod
@@ -55,7 +56,8 @@ If your systemtime is off, synchronize with timeserver."""
     @cached_property
     def assets(self):
         """Assets, all columns"""
-        _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"), columns=self.columns).set_index('Open time')
+        _assets = pd.concat((pd.DataFrame(client.klines(symbol, "1d"),
+                                          columns=self.columns).set_index('Open time')
                             for symbol in self.symbols[:3]), axis=1, keys=self.symbols[:3])
         _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
         _assets.index = pd.to_datetime(_assets.index, unit='ms')
