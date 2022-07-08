@@ -130,8 +130,8 @@ If your systemtime is off, synchronize with timeserver."""
         _correlation = returns.corr()
         return _correlation
 
-    @property
-    def covar(self):
+    @staticmethod
+    def covar():
         """Covariance"""
         _covar = returns.cov() * TD
         return _covar
@@ -197,7 +197,7 @@ stats = algo.annual_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
     rfr) / stats['Risk']
 stats['Var'] = np.power(stats.Risk, 2)
-stats['SysVar'] = algo.covar.iloc[:, -1]
+stats['SysVar'] = algo.covar().iloc[:, -1]
 stats['UnsysVar'] = stats['Var'].sub(stats['SysVar'])
 stats['beta'] = stats['SysVar'] / \
     stats.loc['TP', 'SysVar']  # Normalize == beta
