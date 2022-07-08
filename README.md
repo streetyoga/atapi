@@ -26,7 +26,8 @@ Welcome to the Algorithmic Trading API. Type help/? for commands.
 𝔞𝔱𝔞𝔭𝔦
 ```
 
-## Examples (See Wiki for More)
+## Examples
+## [Documentation](https://github.com/streetyoga/atapi/wiki/Documentation)
 ```
 help
 
