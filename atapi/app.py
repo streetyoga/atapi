@@ -16,6 +16,14 @@ def circulating_supply():
     return jsonify(Symbols=parsed)
 
 
+@app.route('/api/symbols/<string:symbol>')
+def get_cs_by_symbol(symbol):
+    df = algo.circulating_supply()
+    if symbol in df.index:
+        return jsonify({symbol: df.loc[symbol]})
+    return jsonify({'message': f'Symbol {symbol!r} does not exist.'})
+
+
 @app.route('/api/rfr')
 def risk_free_return():
     return jsonify({"Risk Free Return": algo.rfr})
