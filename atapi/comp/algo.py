@@ -16,16 +16,6 @@ TR_URL = TR_BASE + TR_EP
 TD = 365.25  # Trading days + 1/4 leap day.
 
 
-def riskfree_return():
-    """Riskfree Return"""
-    response = requests.get(TR_URL+'?sort=-record_date&page[size]=1')
-    data = response.json()['data'][0]['avg_interest_rate_amt']
-    return float(data)/100
-
-
-rfr = riskfree_return()  # T-Bill Average Interest Rate
-
-
 # API key currently not used
 client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
     'BINANCE_API_SECRET'))
@@ -36,6 +26,13 @@ class Algo:
     columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
                'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
                'Taker buy quote asset volume', 'Ignore')
+
+    @property
+    def rfr(self):
+        """Riskfree Return: T-Bill Average Interest Rate"""
+        response = requests.get(TR_URL+'?sort=-record_date&page[size]=1')
+        data = response.json()['data'][0]['avg_interest_rate_amt']
+        return float(data)/100
 
     @staticmethod
     def circulating_supply():
@@ -177,7 +174,7 @@ def portfolio_risk(weights):
 
 def minimized_sharpe(weights):
     """Sharpe Ratio * (-1)"""
-    return (rfr - portfolio_return(weights)) / portfolio_risk(weights)
+    return (algo.rfr - portfolio_return(weights)) / portfolio_risk(weights)
 
 
 # Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
@@ -195,15 +192,15 @@ returns['TP'] = returns.dot(
 # Annual Statistics
 stats = algo.annual_risk_return(returns)
 stats['Sharpe'] = stats['Return'].sub(
-    rfr) / stats['Risk']
+    algo.rfr) / stats['Risk']
 stats['Var'] = np.power(stats.Risk, 2)
 stats['SysVar'] = algo.covar().iloc[:, -1]
 stats['UnsysVar'] = stats['Var'].sub(stats['SysVar'])
 stats['beta'] = stats['SysVar'] / \
     stats.loc['TP', 'SysVar']  # Normalize == beta
 # Expected Return
-stats['CAPM'] = rfr + \
-    (stats.loc["TP", "Return"] - rfr) * stats.beta
+stats['CAPM'] = algo.rfr + \
+    (stats.loc["TP", "Return"] - algo.rfr) * stats.beta
 # Alpha, asset below or above Security market line
 stats['alpha'] = stats.Return - stats.CAPM
 
