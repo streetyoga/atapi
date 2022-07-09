@@ -87,6 +87,7 @@ class Algo(DataFetch):
             self.circulating_supply[:3])
         return _marketcap
 
+    @property
     def marketcap_summary(self):
         """Daily marketcap summary of all assets."""
         _marketcap_summary = self.marketcap().sum(
@@ -94,10 +95,9 @@ class Algo(DataFetch):
         return _marketcap_summary
 
     def weights_cwi(self):
-        # TODO use marketcap_summmary()
         """Capital Weights"""
         _weights_cwi = self.marketcap().div(
-            self.marketcap().sum(axis=1), axis='index')
+            self.marketcap_summary, axis='index')
         return _weights_cwi
 
     @property
@@ -116,106 +116,132 @@ class Algo(DataFetch):
 
     def stats_index(self):
         """Annual risk & return of all assets."""
-        _stats_index = np.log(normalized / normalized.shift()
+        _stats_index = np.log(self.normalized / self.normalized.shift()
                               ).dropna().agg(['mean', 'std']).T
         _stats_index.columns = ['Return', 'Risk']
         _stats_index['Return'] = _stats_index['Return'] * self.TD
         _stats_index['Risk'] = _stats_index['Risk'] * np.sqrt(self.TD)
         return _stats_index
 
-    @staticmethod
-    def mean_returns():
+    def mean_returns(self):
         """Daily Mean Returns Of All Assets."""
-        _mean_returns = returns.mean().rename('Mean Returns')
+        _mean_returns = self.returns_with_tp.mean().rename('Mean Returns')
         return _mean_returns
 
-    @staticmethod
-    def correlation():
+    def correlation(self):
         """Correlation Coefficient"""
-        _correlation = returns.corr()
+        _correlation = self.returns_with_tp.corr()
         return _correlation
 
+    @property
     def covar(self):
         """Covariance"""
-        _covar = returns.cov() * self.TD
+        _covar = self.returns_with_tp.cov() * self.TD
         return _covar
 
     def annual_risk_return(self, ret):
         """Annual Risk σ, Return"""
         stat = ret.agg(['mean', 'std']).T
         stat.columns = ['Return', 'Risk']
-        stat.Return = stat.Return * algo.TD
+        stat.Return = stat.Return * self.TD
         # TODO Cap needed if annual losses > 100% even with log returns
         # stats.loc[stats.Return < -1, 'Return'] = -1
         stat.Risk = stat.Risk * np.sqrt(self.TD)
         return stat
 
+    @property
+    def returns(self):
+        """ Daily Returns"""
+        _returns = np.log(self.assets_close() /
+                          self.assets_close().shift()).dropna()
+        return _returns
 
-algo = Algo()
-returns = np.log(algo.assets_close() /
-                 algo.assets_close().shift()).dropna()
+    @property
+    def normalized(self):
+        """ Normalized Daily Returns"""
+        _normalized = self.assets_close().div(
+            self.assets_close().iloc[0]).mul(100)
+        _normalized['PWI'] = self.assets_close().sum(
+            axis=1).div(self.assets_close().sum(axis=1)[0]).mul(100)
+        _normalized['EWI'] = 100
+        _normalized.iloc[1:, -
+                         1] = self.returns_index.Mean.add(1).cumprod().mul(100)
+        _normalized['CWI'] = 100
+        _normalized.iloc[1:, -1] = self.returns.mul(self.weights_cwi().shift().dropna()
+                                                    ).sum(axis=1).add(1).cumprod().mul(100)
+        return _normalized
 
-normalized = algo.assets_close().div(
-    algo.assets_close().iloc[0]).mul(100)
-normalized['PWI'] = algo.assets_close().sum(
-    axis=1).div(algo.assets_close().sum(axis=1)[0]).mul(100)
-returns_index = returns.copy()
-returns_index['Mean'] = returns_index.mean(axis=1)
-normalized['EWI'] = 100
-normalized.iloc[1:, -1] = returns_index.Mean.add(1).cumprod().mul(100)
-normalized['CWI'] = 100
-normalized.iloc[1:, -1] = returns.mul(algo.weights_cwi().shift().dropna()
-                                      ).sum(axis=1).add(1).cumprod().mul(100)
+    @property
+    def returns_index(self):
+        _returns_index = self.returns.copy()
+        _returns_index['Mean'] = _returns_index.mean(axis=1)
+        return _returns_index
 
+    def portfolio_return(self, weights):
+        """Annual Portfolio Return"""
+        return self.returns.dot(weights.T).mean() * self.TD
 
-def portfolio_return(weights):
-    """Annual Portfolio Return"""
-    return returns.dot(weights.T).mean() * algo.TD
+    def portfolio_risk(self, weights):
+        """Annual Portfolio Risk"""
+        return self.returns.dot(weights.T).std() * np.sqrt(self.TD)
 
+    def minimized_sharpe(self, weights):
+        """Sharpe Ratio * (-1)"""
+        return (self.rfr - self.portfolio_return(weights)) / self.portfolio_risk(weights)
 
-def portfolio_risk(weights):
-    """Annual Portfolio Risk"""
-    return returns.dot(weights.T).std() * np.sqrt(algo.TD)
+    @cached_property
+    def optimal_weights(self):
+        """ Optimal Sharpe Ratio Portfolio (Tangency Portfolio) """
+        equal_weights = np.full(self.asset_qty, 1 / self.asset_qty)
+        constraint = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+        bounds = tuple((0, 1) for _ in range(self.asset_qty))
+        optimum = sco.minimize(self.minimized_sharpe, equal_weights,
+                               method='SLSQP', bounds=bounds, constraints=constraint)
+        _optimal_weights = optimum['x']
+        _optimal_weights = pd.Series(
+            index=self.assets_close().columns, data=_optimal_weights, name='Optimal Weights')
+        return _optimal_weights
 
+    @property
+    def returns_with_tp(self):
+        """Returns including Tangency Portfolio"""
+        _returns_with_tp = self.returns.copy()
+        _returns_with_tp['TP'] = _returns_with_tp.dot(self.optimal_weights)
+        return _returns_with_tp
 
-def minimized_sharpe(weights):
-    """Sharpe Ratio * (-1)"""
-    return (algo.rfr - portfolio_return(weights)) / portfolio_risk(weights)
+    @property
+    def stats(self):
+        """ Annual Statistics """
 
+        _stats = self.annual_risk_return(self.returns_with_tp)
+        _stats['Sharpe'] = _stats['Return'].sub(
+            self.rfr) / _stats['Risk']
+        _stats['Var'] = np.power(_stats.Risk, 2)
+        _stats['SysVar'] = self.covar.iloc[:, -1]
+        _stats['UnsysVar'] = _stats['Var'].sub(_stats['SysVar'])
+        _stats['beta'] = _stats['SysVar'] / \
+            _stats.loc['TP', 'SysVar']  # Normalize == beta
+        # Expected Return
+        _stats['CAPM'] = self.rfr + \
+            (_stats.loc["TP", "Return"] - self.rfr) * _stats.beta
+        # Alpha, asset below or above Security market line
+        _stats['alpha'] = _stats.Return - _stats.CAPM
+        return _stats
 
-# Optimal Sharpe Ratio Portfolio (Tangency Portfolio)
-equal_weights = np.full(algo.asset_qty, 1 / algo.asset_qty)
-constraint = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-bounds = tuple((0, 1) for _ in range(algo.asset_qty))
-optimum = sco.minimize(minimized_sharpe, equal_weights,
-                       method='SLSQP', bounds=bounds, constraints=constraint)
-optimal_weights = optimum['x']
-optimal_weights = pd.Series(
-    index=algo.assets_close().columns, data=optimal_weights, name='Optimal Weights')
-returns['TP'] = returns.dot(
-    optimal_weights)
+    @property
+    def returns_mcap(self):
+        """ Marketcap Portfolio Returns"""
+        _returns_mcap = self.returns.copy()
+        _returns_mcap['MCAP'] = _returns_mcap.mul(
+            self.weights_cwi().shift().dropna()).sum(axis=1)
+        return _returns_mcap
 
-# Annual Statistics
-stats = algo.annual_risk_return(returns)
-stats['Sharpe'] = stats['Return'].sub(
-    algo.rfr) / stats['Risk']
-stats['Var'] = np.power(stats.Risk, 2)
-stats['SysVar'] = algo.covar().iloc[:, -1]
-stats['UnsysVar'] = stats['Var'].sub(stats['SysVar'])
-stats['beta'] = stats['SysVar'] / \
-    stats.loc['TP', 'SysVar']  # Normalize == beta
-# Expected Return
-stats['CAPM'] = algo.rfr + \
-    (stats.loc["TP", "Return"] - algo.rfr) * stats.beta
-# Alpha, asset below or above Security market line
-stats['alpha'] = stats.Return - stats.CAPM
-
-# Marketcap Portfolio
-returns_mcap = returns.drop(columns=['TP'])
-returns_mcap['MCAP'] = returns_mcap.mul(
-    algo.weights_cwi().shift().dropna()).sum(axis=1)
-stats_mcap = algo.annual_risk_return(returns_mcap)
-covar_mcap = returns_mcap.cov() * algo.TD
-stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]
-stats_mcap['beta'] = stats_mcap['SysVar'] / \
-    stats_mcap.loc['MCAP', 'SysVar']
+    @property
+    def stats_mcap(self):
+        """ Marketcap Portfolio Statistics"""
+        _stats_mcap = self.annual_risk_return(self.returns_mcap)
+        covar_mcap = self.returns_mcap.cov() * self.TD
+        _stats_mcap['SysVar'] = covar_mcap.iloc[:, -1]
+        _stats_mcap['beta'] = _stats_mcap['SysVar'] / \
+            _stats_mcap.loc['MCAP', 'SysVar']
+        return _stats_mcap
