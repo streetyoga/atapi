@@ -33,6 +33,7 @@ atf🖖 marketcap
 Project is planed to be production ready in 2 years and shall remain written purly in Python:
 
 - It uses the official lightweight [binance-connector-python](https://github.com/binance/binance-connector-python) and [requests](https://pypi.org/project/requests/) for Market Capitalisation data and various other API endpoints like treasury rates.
+- [Flask](https://github.com/pallets/flask/) JSON API in the making
 - [binance-futures-connector-python](https://github.com/binance/binance-futures-connector-python) will be implemented next.
 - Consideration of [python-binance](https://github.com/sammchardy/python-binance) and [CCXT](https://github.com/ccxt/ccxt) library. CCXT supports hundreds of exchanges out of the box which should faciliate the implementation of arbitrage among different exchanges, but python-binance (which won a contest sponsored by binance) might have better api support for binance, i.e. implement NFT trading of the official binance API earlier, once it will be supported. The binance public API connector is very basic and a lot of work needs to be implemented in requests
 - decision which algorithm to implement first, probably simple moving average with fixed values.
@@ -53,9 +54,8 @@ Project is planed to be production ready in 2 years and shall remain written pur
 - If neccessary implementation of GUI  
  
   
-   [PyScript](https://pyscript.net/)  
-   [fastAPI](https://fastapi.tiangolo.com/)  
-   [Flask](https://github.com/pallets/flask/)   
+   [PyScript](https://pyscript.net/) Relatively Slow  
+   [fastAPI](https://fastapi.tiangolo.com/) asyncio  
    [Django](https://github.com/django/django)  
    [tkinter](https://github.com/python/cpython/tree/main/Lib/tkinter) tkinter has ttk module with theme support.  
    [Dash](https://github.com/plotly/dash)  
