@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def api():
-    return jsonify({'Servertime': Algo.servertime()})
+    return jsonify(Servertime=Algo.servertime())
 
 
 @app.route('/api')

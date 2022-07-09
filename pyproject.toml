@@ -18,7 +18,11 @@ dependencies = [
     "rich",
     "Flask",
 ]
-classifiers = ["Environment :: Console"]
+classifiers = [
+    "Intended Audience :: Financial and Insurance Industry",
+    "Environment :: Console",
+    "Framework :: Flask",
+]
 
 [project.optional-dependencies]
 dev = ["flake8", "pytest", "reloadium"]
