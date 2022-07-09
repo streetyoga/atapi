@@ -64,7 +64,7 @@ class ATFShell(cmd.Cmd):
     def do_circulating_supply(arg):
         """Returns the circulating supply."""
         table = Table('Circulating Supply')
-        table.add_row(at.algo.circulating_supply().to_string(
+        table.add_row(at.algo.circulating_supply.to_string(
             float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
