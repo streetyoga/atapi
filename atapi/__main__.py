@@ -6,7 +6,7 @@ import sys
 import cmd
 from rich.console import Console
 from rich.table import Table
-import atapi as at
+from atapi.comp import Algo
 
 
 class AF:
@@ -57,14 +57,14 @@ class ATFShell(cmd.Cmd):
     def do_servertime(arg):
         """Print Servertime."""
         table = Table('Server Time')
-        table.add_row(str(at.algo.servertime()))
+        table.add_row(str(algo.servertime()))
         console.print(table)
 
     @staticmethod
     def do_circulating_supply(arg):
         """Returns the circulating supply."""
         table = Table('Circulating Supply')
-        table.add_row(at.algo.circulating_supply().to_string(
+        table.add_row(algo.circulating_supply.to_string(
             float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
@@ -72,14 +72,14 @@ class ATFShell(cmd.Cmd):
     def do_assets_close(arg):
         """Daily close price data for assets."""
         table = Table('Assets Close Prices')
-        table.add_row(at.algo.assets_close().to_string())
+        table.add_row(algo.assets_close().to_string())
         console.print(table)
 
     @staticmethod
     def do_marketcap(arg):
         """Simplified marketcap, only with last circulating supply."""
         table = Table('Market Cap')
-        table.add_row(at.algo.marketcap().to_string(
+        table.add_row(algo.marketcap().to_string(
                       float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
@@ -87,7 +87,7 @@ class ATFShell(cmd.Cmd):
     def do_marketcap_summary(arg):
         """Daily marketcap summary of all assets."""
         table = Table('Crypto Market Cap')
-        table.add_row(at.algo.marketcap_summary().to_string(
+        table.add_row(algo.marketcap_summary.to_string(
             float_format=lambda _: f'{_:,.0f}'))
         console.print(table)
 
@@ -95,7 +95,7 @@ class ATFShell(cmd.Cmd):
     def do_optimal_weights(arg):
         """Optimal weights calculated with sequential least squares programming."""
         table = Table('Optimal Weights')
-        table.add_row(at.optimal_weights.to_string(
+        table.add_row(algo.optimal_weights.to_string(
             float_format=lambda _: f'{_:.0f}'))
         console.print(table)
 
@@ -103,7 +103,7 @@ class ATFShell(cmd.Cmd):
     def do_returns(arg):
         """Daily logarithmic returns."""
         table = Table('Log Returns')
-        table.add_row(at.returns.to_string(
+        table.add_row(algo.returns_with_tp.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -112,7 +112,7 @@ class ATFShell(cmd.Cmd):
         """Normalized Asset Returns Base 100."""
         table = Table(
             'Normalized Returns, Price Weighed, Equal Weighted, Capitalization Weighted')
-        table.add_row(at.normalized.to_string(
+        table.add_row(algo.normalized.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -120,7 +120,7 @@ class ATFShell(cmd.Cmd):
     def do_weights_cwi(arg):
         """Capital weighted index."""
         table = Table('Capital Weighted Index')
-        table.add_row(at.algo.weights_cwi().to_string(
+        table.add_row(algo.weights_cwi().to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -128,7 +128,7 @@ class ATFShell(cmd.Cmd):
     def do_weights_pwi(arg):
         """Price weighted index."""
         table = Table('Price Weighted Index')
-        table.add_row(at.algo.weights_pwi.to_string(
+        table.add_row(algo.weights_pwi.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -136,7 +136,7 @@ class ATFShell(cmd.Cmd):
     def do_weights_ewi(arg):
         """Equal weighted index."""
         table = Table('Equal Weighted Index')
-        table.add_row(at.algo.weights_ewi.to_string(
+        table.add_row(algo.weights_ewi.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -144,7 +144,7 @@ class ATFShell(cmd.Cmd):
     def do_stats_index(arg):
         """Anualized risk / return of all assets."""
         table = Table('Anualized Risk & Return')
-        table.add_row(at.algo.stats_index().to_string(
+        table.add_row(algo.stats_index().to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -152,7 +152,7 @@ class ATFShell(cmd.Cmd):
     def do_mean_returns(arg):
         """Daily Mean Returns Of All Assets."""
         table = Table('Daily Mean Returns')
-        table.add_row(at.algo.mean_returns().to_string(
+        table.add_row(algo.mean_returns().to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -160,7 +160,7 @@ class ATFShell(cmd.Cmd):
     def do_correlation(arg):
         """Correlation Coefficient"""
         table = Table('Correlation Coefficient')
-        table.add_row(at.algo.correlation().to_string(
+        table.add_row(algo.correlation().to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -168,7 +168,7 @@ class ATFShell(cmd.Cmd):
     def do_covariance(arg):
         """Covariance."""
         table = Table('Annualized Covariance')
-        table.add_row(at.algo.covar().to_string(
+        table.add_row(algo.covar.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -177,7 +177,7 @@ class ATFShell(cmd.Cmd):
         """Return, risk, sharpe, variance, systematic variance,
 unsystematic variance, beta, CAPM, alpha."""
         table = Table('Anualized Modern Portfolio Theory Metrics')
-        table.add_row(at.stats.to_string(
+        table.add_row(algo.stats.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
@@ -185,12 +185,13 @@ unsystematic variance, beta, CAPM, alpha."""
     def do_stats_mcap(arg):
         """Marketcap portfolio."""
         table = Table('Market Cap Portfolio')
-        table.add_row(at.stats_mcap.to_string(
+        table.add_row(algo.stats_mcap.to_string(
             float_format=lambda _: f'{_:.4f}'))
         console.print(table)
 
 
 if __name__ == '__main__':
+    algo = Algo()
     console = Console()
     shell = ATFShell()
     shell.cmdloop()
