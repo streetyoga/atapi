@@ -13,7 +13,7 @@ def api():
 @app.route('/api')
 def circulating_supply():
     parsed = json.loads(Algo.circulating_supply().to_json(orient='index'))
-    return jsonify({"Symbols": parsed})
+    return jsonify(Symbols=parsed)
 
 
 if __name__ == "__main__":
