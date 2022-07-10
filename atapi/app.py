@@ -12,13 +12,13 @@ def api():
 
 @app.route('/api')
 def circulating_supply():
-    parsed = json.loads(algo.circulating_supply().to_json(orient='index'))
+    parsed = json.loads(algo.circulating_supply.to_json(orient='index'))
     return jsonify(Symbols=parsed)
 
 
 @app.route('/api/symbols/<string:symbol>')
 def get_cs_by_symbol(symbol):
-    df = algo.circulating_supply()
+    df = algo.circulating_supply
     if symbol in df.index:
         return jsonify({symbol: df.loc[symbol]})
     return jsonify({'message': f'Symbol {symbol!r} does not exist.'})
