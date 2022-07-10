@@ -54,140 +54,98 @@ class ATFShell(cmd.Cmd):
         sys.exit()
 
     @staticmethod
-    def do_servertime(arg):
+    def format_table(name, data):
+        """Format Tables"""
+        table = Table(name)
+        table.add_row(data)
+        console.print(table)
+
+    def do_servertime(self, arg):
         """Print Servertime."""
-        table = Table('Server Time')
-        table.add_row(str(algo.servertime()))
-        console.print(table)
+        self.format_table('Server Time', str(algo.servertime()))
 
-    @staticmethod
-    def do_circulating_supply(arg):
+    def do_circulating_supply(self, arg):
         """Returns the circulating supply."""
-        table = Table('Circulating Supply')
-        table.add_row(algo.circulating_supply.to_string(
+        self.format_table('Circulating Supply', algo.circulating_supply.to_string(
             float_format=lambda _: f'{_:,.0f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_assets_close(arg):
+    def do_assets_close(self, arg):
         """Daily close price data for assets."""
-        table = Table('Assets Close Prices')
-        table.add_row(algo.assets_close().to_string())
-        console.print(table)
+        self.format_table('Assets Close Prices',
+                          algo.assets_close().to_string())
 
-    @staticmethod
-    def do_marketcap(arg):
+    def do_marketcap(self, arg):
         """Simplified marketcap, only with last circulating supply."""
-        table = Table('Market Cap')
-        table.add_row(algo.marketcap().to_string(
-                      float_format=lambda _: f'{_:,.0f}'))
-        console.print(table)
-
-    @staticmethod
-    def do_marketcap_summary(arg):
-        """Daily marketcap summary of all assets."""
-        table = Table('Crypto Market Cap')
-        table.add_row(algo.marketcap_summary.to_string(
+        self.format_table('Market Cap', algo.marketcap().to_string(
             float_format=lambda _: f'{_:,.0f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_optimal_weights(arg):
+    def do_marketcap_summary(self, arg):
+        """Daily marketcap summary of all assets."""
+        self.format_table('Crypto Market Cap', algo.marketcap_summary.to_string(
+            float_format=lambda _: f'{_:,.0f}'))
+
+    def do_optimal_weights(self, arg):
         """Optimal weights calculated with sequential least squares programming."""
-        table = Table('Optimal Weights')
-        table.add_row(algo.optimal_weights.to_string(
+        self.format_table('Optimal Weights', algo.optimal_weights.to_string(
             float_format=lambda _: f'{_:.0f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_returns(arg):
+    def do_returns(self, arg):
         """Daily logarithmic returns."""
-        table = Table('Log Returns')
-        table.add_row(algo.returns_with_tp.to_string(
+        self.format_table('Log Returns', algo.returns_with_tp.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_normalized(arg):
+    def do_normalized(self, arg):
         """Normalized Asset Returns Base 100."""
-        table = Table(
-            'Normalized Returns, Price Weighed, Equal Weighted, Capitalization Weighted')
-        table.add_row(algo.normalized.to_string(
-            float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
+        self.format_table(
+            'Normalized Returns, Price Weighed, Equal Weighted, Capitalization Weighted',
+            algo.normalized.to_string(
+                float_format=lambda _: f'{_:.4f}'))
 
-    @staticmethod
-    def do_weights_cwi(arg):
+    def do_weights_cwi(self, arg):
         """Capital weighted index."""
-        table = Table('Capital Weighted Index')
-        table.add_row(algo.weights_cwi().to_string(
+        self.format_table('Capital Weighted Index', algo.weights_cwi().to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_weights_pwi(arg):
+    def do_weights_pwi(self, arg):
         """Price weighted index."""
-        table = Table('Price Weighted Index')
-        table.add_row(algo.weights_pwi.to_string(
+        self.format_table('Price Weighted Index', algo.weights_pwi.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_weights_ewi(arg):
+    def do_weights_ewi(self, arg):
         """Equal weighted index."""
-        table = Table('Equal Weighted Index')
-        table.add_row(algo.weights_ewi.to_string(
+        self.format_table('Equal Weighted Index', algo.weights_ewi.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_stats_index(arg):
+    def do_stats_index(self, arg):
         """Anualized risk / return of all assets."""
-        table = Table('Anualized Risk & Return')
-        table.add_row(algo.stats_index().to_string(
+        self.format_table('Anualized Risk & Return', algo.stats_index().to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_mean_returns(arg):
+    def do_mean_returns(self, arg):
         """Daily Mean Returns Of All Assets."""
-        table = Table('Daily Mean Returns')
-        table.add_row(algo.mean_returns().to_string(
+        self.format_table('Daily Mean Returns', algo.mean_returns().to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_correlation(arg):
+    def do_correlation(self, arg):
         """Correlation Coefficient"""
-        table = Table('Correlation Coefficient')
-        table.add_row(algo.correlation().to_string(
+        self.format_table('Correlation Coefficient', algo.correlation().to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_covariance(arg):
+    def do_covariance(self, arg):
         """Covariance."""
-        table = Table('Annualized Covariance')
-        table.add_row(algo.covar.to_string(
+        self.format_table('Annualized Covariance', algo.covar.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_stats(arg):
+    def do_stats(self, arg):
         """Return, risk, sharpe, variance, systematic variance,
 unsystematic variance, beta, CAPM, alpha."""
-        table = Table('Anualized Modern Portfolio Theory Metrics')
-        table.add_row(algo.stats.to_string(
+        self.format_table('Anualized Modern Portfolio Theory Metrics', algo.stats.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
-    @staticmethod
-    def do_stats_mcap(arg):
+    def do_stats_mcap(self, arg):
         """Marketcap portfolio."""
-        table = Table('Market Cap Portfolio')
-        table.add_row(algo.stats_mcap.to_string(
+        self.format_table('Market Cap Portfolio', algo.stats_mcap.to_string(
             float_format=lambda _: f'{_:.4f}'))
-        console.print(table)
 
 
 if __name__ == '__main__':
