@@ -10,7 +10,7 @@ license = { file = "LICENSE.txt" }
 dynamic = ["version"]
 requires-python = ">=3.8"
 authors = [{ name = "Miron Tewfik", email = "miron@street.yoga" }]
-dependencies = ["pandas", "binance-connector", "scipy", "requests", "rich"]
+dependencies = ["pandas", "scipy", "requests", "rich"]
 classifiers = ["Environment :: Console"]
 
 [project.optional-dependencies]
@@ -22,7 +22,7 @@ documentation = "https://github.com/streetyoga/atapi/wiki/Documentation"
 repository = "https://github.com/streetyoga/atapi"
 
 [tool.setuptools]
-packages = ["atapi", "atapi.comp"]
+packages = ["atapi", "atapi.cmp", "atapi.eps"]
 
 [tool.setuptools_scm]
 
