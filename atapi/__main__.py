@@ -6,7 +6,7 @@ import sys
 import cmd
 from rich.console import Console
 from rich.table import Table
-from atapi.comp import Algo
+from atapi.cmp import Algo
 
 
 class AF:
@@ -48,7 +48,7 @@ class ATFShell(cmd.Cmd):
         AF.menu()
 
     @staticmethod
-    def do_bye(arg):
+    def do_quit(arg):
         'Exits the API.'
         print('Thank you for using 𝔞𝔱𝔞𝔭𝔦')
         sys.exit()

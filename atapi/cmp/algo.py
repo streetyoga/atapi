@@ -1,70 +1,12 @@
 """Computation Module"""
-import os
 from functools import cached_property
 import numpy as np
 import pandas as pd
 import scipy.optimize as sco
-import requests
-from binance.spot import Spot as Client
+from atapi.eps import Data
 
 
-class DataFetch:
-    """Obtain Data From Various Sources"""
-    MC_BASE = 'https://www.binance.com'
-    MC_EP = '/exchange-api/v2/public/asset-service/product/get-products'
-    MC_URL = MC_BASE + MC_EP  # For Circulating Supply Data
-    TR_BASE = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/'
-    TR_EP = 'v2/accounting/od/avg_interest_rates'
-    TR_URL = TR_BASE + TR_EP
-
-    columns = ('Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
-               'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
-               'Taker buy quote asset volume', 'Ignore')
-
-    # API key currently not used
-    client = Client(os.getenv('BINANCE_API_KEY'), os.getenv(
-        'BINANCE_API_SECRET'))
-
-    @property
-    def rfr(self):
-        """Riskfree Return: T-Bill Average Interest Rate"""
-        response = requests.get(self.TR_URL+'?sort=-record_date&page[size]=1')
-        data = response.json()['data'][0]['avg_interest_rate_amt']
-        return float(data)/100
-
-    @property
-    def circulating_supply(self):
-        """Circulating Supply"""
-        response = requests.get(self.MC_URL)
-        data = response.json()['data']
-        return pd.Series({item['s']: item['cs'] for item in data if item['s'].endswith('USDT')},
-                         name='Circulating Supply')
-
-    @property
-    def symbols(self):
-        """Ticker Symbols"""
-        _symbols = self.circulating_supply.index.values.tolist()
-        return _symbols[:3]
-
-    def servertime(self):
-        """Returns the servertime.
-If your systemtime is off, synchronize with timeserver."""
-        # TODO exception when time is out of sync
-        return pd.to_datetime(self.client.time()['serverTime'], unit='ms')
-
-    @cached_property
-    def assets(self):
-        """Assets, all columns"""
-        _assets = pd.concat((pd.DataFrame(self.client.klines(symbol, "1d"),
-                                          columns=self.columns).set_index('Open time')
-                            for symbol in self.symbols), axis=1, keys=self.symbols)
-        _assets = _assets.swaplevel(axis=1)  # Swapping levels for selection
-        _assets.index = pd.to_datetime(_assets.index, unit='ms')
-        _assets.index.name = 'Date'
-        return _assets
-
-
-class Algo(DataFetch):
+class Algo(Data):
 
     """Quantitative Analysis"""
 
