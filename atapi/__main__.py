@@ -49,7 +49,7 @@ class ATFShell(cmd.Cmd):
 
     @staticmethod
     def do_quit(arg):
-        'Exits the API.'
+        """Exits the API."""
         print('Thank you for using 𝔞𝔱𝔞𝔭𝔦')
         sys.exit()
 
